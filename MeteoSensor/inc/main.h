@@ -17,13 +17,15 @@
 #include "hardware_NUCLEO_L476RG.h"
 #include "types.h"
 
-//#include "../CLog/log.hpp"
+#include "../CLog/log.hpp"
 //#include "../CBluetooth/bluenrg.hpp"
 //#include "../CBluetooth/spi.hpp"
 
 
-//extern CLogModule       Log;
+extern CLogModule       Log;
 //extern CSpiModule       Spi;
 //extern CBlueNRGModule   BlueNRG;
 
+
+int main(void);
 #endif // MAIN_HPP_
