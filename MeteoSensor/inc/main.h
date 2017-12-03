@@ -18,13 +18,13 @@
 #include "types.h"
 
 #include "../CLog/log.hpp"
-//#include "../CBluetooth/bluenrg.hpp"
-//#include "../CBluetooth/spi.hpp"
+#include "../CBlueNRG/spi.hpp"
+#include "../CBlueNRG/bluenrg.hpp"
 
 
 extern CLogModule       Log;
-//extern CSpiModule       Spi;
-//extern CBlueNRGModule   BlueNRG;
+extern CSpiModule       Spi;
+extern CBlueNRGModule   BlueNRG;
 
 
 int main(void);

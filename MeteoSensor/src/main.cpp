@@ -1,7 +1,9 @@
 #include "main.h"
 #include "init.h"
 
-CLogModule       Log;
+CLogModule        Log;
+CSpiModule        Spi;
+CBlueNRGModule    BlueNRG;
 
 int main(void)
 {
@@ -15,8 +17,11 @@ int main(void)
    Log.Str(__TIME__);
    Log.Str("\r");
 
+   LL_GPIO_SetOutputPin(PIN_BLUENRG_SPI_RESET_PORT, PIN_BLUENRG_SPI_RESET_PIN);
+
    while(1)
    {
-
+      if(BlueNRG.HandleRequest)
+         BlueNRG.Handle();
    }
 }

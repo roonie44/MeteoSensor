@@ -35,18 +35,7 @@ void USART2_IRQHandler(void)
 void EXTI0_IRQHandler(void)
 {
    EXTI->PR1 = EXTI_PR1_PIF0;
-   //BlueNRG.InterruptIRQ();
-}
-
-void EXTI9_5_IRQHandler(void)
-{
-   unsigned int PR = EXTI->PR1;
-
-   if(PR & EXTI_PR1_PIF7)
-   {
-      EXTI->PR1 = EXTI_PR1_PIF7;
-      //BlueNRG.InterruptIRQ();
-   }
+   BlueNRG.HandleIRQ();
 }
 
 void Default_Handler(void)
@@ -95,7 +84,7 @@ void* g_pfnVectors[] __attribute__ ((section (".isr_vector"))) =
    (void*)&Default_Handler,            // CAN1_RX0_IRQHandler,
    (void*)&Default_Handler,            // CAN1_RX1_IRQHandler,
    (void*)&Default_Handler,            // CAN1_SCE_IRQHandler,
-   (void*)&EXTI9_5_IRQHandler,
+   (void*)&Default_Handler,            // EXTI9_5_IRQHandler,
    (void*)&Default_Handler,            // TIM1_BRK_TIM15_IRQHandler,
    (void*)&Default_Handler,            // TIM1_UP_TIM16_IRQHandler,
    (void*)&Default_Handler,            // TIM1_TRG_COM_IRQHandler,
