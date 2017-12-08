@@ -42,10 +42,11 @@ void Init_PeriphClock(void)
    LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOC);
    LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOD);
    LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOH);
+   LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_SPI1);
 
    LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_USART2);
    LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_DMA1);
-   LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_SPI1);
+   LL_AHB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_I2C1);
 }
 
 void Init_GPIO(void)
@@ -164,6 +165,21 @@ void Init_BlueNRG_SPI(void)
    LL_SPI_Enable(SPI_BLUENRG);
 }
 
+void Init_I2C(void)
+{
+   LL_GPIO_SetPinMode(PIN_SENSOR_I2C_SCL_PORT, PIN_SENSOR_I2C_SCL_PIN, LL_GPIO_MODE_ALTERNATE);
+   LL_GPIO_SetAFPin_8_15(PIN_SENSOR_I2C_SCL_PORT, PIN_SENSOR_I2C_SCL_PIN, PIN_SENSOR_I2C_SCL_AF);
+
+   LL_GPIO_SetPinMode(PIN_SENSOR_I2C_SDA_PORT, PIN_SENSOR_I2C_SDA_PIN, LL_GPIO_MODE_ALTERNATE);
+   LL_GPIO_SetAFPin_8_15(PIN_SENSOR_I2C_SDA_PORT, PIN_SENSOR_I2C_SDA_PIN, PIN_SENSOR_I2C_SDA_AF);
+
+   LL_I2C_Disable(I2C_SENSOR);
+
+   I2C_SENSOR->TIMINGR |= I2C_TIMINGR_PRESC;
+
+   LL_I2C_Enable(I2C_SENSOR);
+}
+
 void Init_Interrupts(void)
 {
    // Log TX Transfer Complete
@@ -194,6 +210,7 @@ void Init_Hardware(void)
    Init_LogRxDMA();
 
    Init_BlueNRG_SPI();
+   Init_I2C();
 
    Init_Interrupts();
 }

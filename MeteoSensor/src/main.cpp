@@ -4,6 +4,7 @@
 CLogModule        Log;
 CSpiModule        Spi;
 CBlueNRGModule    BlueNRG;
+CSensorModule     Sensor;
 
 int main(void)
 {
@@ -23,5 +24,8 @@ int main(void)
    {
       if(BlueNRG.HandleRequest)
          BlueNRG.Handle();
+
+      if(Sensor.HandleRequest)
+         Sensor.Handle();
    }
 }

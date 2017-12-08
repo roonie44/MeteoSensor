@@ -33,6 +33,22 @@
 #define PIN_BLUENRG_SPI_AF                LL_GPIO_AF_5
 #define SPI_BLUENRG                       SPI1
 
+// HTS221 - Temperature/humidity sensor
+// LPS25HB - Pressure sensor
+#define PIN_SENSOR_I2C_SDA_PIN            LL_GPIO_PIN_8
+#define PIN_SENSOR_I2C_SDA_PORT           GPIOB
+#define PIN_SENSOR_I2C_SDA_AF             LL_GPIO_AF_4
+#define PIN_SENSOR_I2C_SCL_PIN            LL_GPIO_PIN_9
+#define PIN_SENSOR_I2C_SCL_PORT           GPIOB
+#define PIN_SENSOR_I2C_SCL_AF             LL_GPIO_AF_4
+#define I2C_SENSOR                        I2C1
+#define PIN_HTS221_I2C_DRDY_PIN           LL_GPIO_PIN_10
+#define PIN_HTS221_I2C_DRDY_PORT          GPIOB
+#define I2C_ADDRESS_HTS221                0xBE
+#define PIN_LPS25HB_I2C_INT_PIN           LL_GPIO_PIN_4
+#define PIN_LPS25HB_I2C_INT_PORT          GPIOB
+#define I2C_ADDRESS_LPS25HB               0x00
+
 // LED
 #define PIN_LED_GREEN_PIN                 LL_GPIO_PIN_5
 #define PIN_LED_GREEN_PORT                GPIOA

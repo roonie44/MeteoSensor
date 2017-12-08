@@ -13,6 +13,7 @@
 #include "stm32l4xx_ll_pwr.h"
 #include "stm32l4xx_ll_usart.h"
 #include "stm32l4xx_ll_spi.h"
+#include "stm32l4xx_ll_i2c.h"
 
 #include "hardware_NUCLEO_L476RG.h"
 #include "types.h"
@@ -20,12 +21,13 @@
 #include "../CLog/log.hpp"
 #include "../CBlueNRG/spi.hpp"
 #include "../CBlueNRG/bluenrg.hpp"
+#include "../CSensor/sensor.hpp"
 
 
 extern CLogModule       Log;
 extern CSpiModule       Spi;
 extern CBlueNRGModule   BlueNRG;
-
+extern CSensorModule    Sensor;
 
 int main(void);
 #endif // MAIN_HPP_
