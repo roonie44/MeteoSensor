@@ -4,6 +4,7 @@
 CLogModule        Log;
 CSpiModule        Spi;
 CBlueNRGModule    BlueNRG;
+CI2CModule        I2C;
 CSensorModule     Sensor;
 
 int main(void)
@@ -18,7 +19,8 @@ int main(void)
    Log.Str(__TIME__);
    Log.Str("\r");
 
-   LL_GPIO_SetOutputPin(PIN_BLUENRG_SPI_RESET_PORT, PIN_BLUENRG_SPI_RESET_PIN);
+   Sensor.Init();
+   BlueNRG.Init();
 
    while(1)
    {
@@ -27,5 +29,17 @@ int main(void)
 
       if(Sensor.HandleRequest)
          Sensor.Handle();
+   }
+}
+
+void CommandExecute(unsigned int u32CommandCode)
+{
+   Log.StrHexR("CMD ", u32CommandCode, 1);
+
+   switch(u32CommandCode)
+   {
+   case 1:
+      Sensor.Handle();
+      break;
    }
 }

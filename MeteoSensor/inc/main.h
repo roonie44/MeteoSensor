@@ -21,13 +21,16 @@
 #include "../CLog/log.hpp"
 #include "../CBlueNRG/spi.hpp"
 #include "../CBlueNRG/bluenrg.hpp"
+#include "../CSensor/i2c.hpp"
 #include "../CSensor/sensor.hpp"
 
 
 extern CLogModule       Log;
 extern CSpiModule       Spi;
 extern CBlueNRGModule   BlueNRG;
+extern CI2CModule       I2C;
 extern CSensorModule    Sensor;
 
-int main(void);
+int   main           (void);
+void  CommandExecute (unsigned int u32CommandCode);
 #endif // MAIN_HPP_

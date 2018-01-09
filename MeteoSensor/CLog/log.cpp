@@ -113,7 +113,25 @@ void CLogModule::StrHexR(const char* pString, unsigned int u32Number, unsigned i
 
 void CLogModule::Dec(unsigned int u32Number)
 {
+   unsigned char U8OutputDec[10];
+   int s32Len = 0;
 
+   do
+   {
+      U8OutputDec[s32Len] =  u32Number % 10;
+      u32Number /= 10;
+      s32Len++;
+   }
+   while(u32Number > 0);
+
+   while(s32Len > 0)
+   {
+      s32Len--;
+      U8OutputBuffer[s32IdxWrite] = ASCII(U8OutputDec[s32Len]);
+      s32IdxWrite = (s32IdxWrite + 1) % sizeof(U8OutputBuffer);
+   }
+   if(LL_DMA_GetDataLength(DMA1, DMA_CHANNEL_LOG_TX) == 0)
+      HandleTx();
 }
 
 void CLogModule::StrDec(const char* pString, unsigned int u32Number)
@@ -168,7 +186,7 @@ void CLogModule::HandleRx(void)
 
    if(U8InputBuffer[0] == 'C' && U8InputBuffer[1] == 'M' && U8InputBuffer[2] == 'D')
    {
-
+      CommandExecute(1);
    }
 
 

@@ -6,6 +6,12 @@ const          char CBlueNRGModule::DEVICE_NAME[]           = "MeteoSensor";
 const unsigned char CBlueNRGModule::SPI_WRITE_HEADER[5]     = { 0x0A, 0x00, 0x00, 0x00, 0x00, };
 const unsigned char CBlueNRGModule::SPI_READ_HEADER[5]      = { 0x0B, 0x00, 0x00, 0x00, 0x00, };
 
+void CBlueNRGModule::Init(void)
+{
+   // Release reset
+   LL_GPIO_SetOutputPin(PIN_BLUENRG_SPI_RESET_PORT, PIN_BLUENRG_SPI_RESET_PIN);
+}
+
 void CBlueNRGModule::Handle(void)
 {
    HandleRequest = false;

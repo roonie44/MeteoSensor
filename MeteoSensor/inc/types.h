@@ -1,7 +1,7 @@
 #ifndef _TYPES_H_
 #define _TYPES_H_
 
-#define ASCII(x)	((x < 10) ? (x + 0x30) : (x + 0x37))
+#define  ASCII(x)	                              (((x) < 10) ? ((x) + 0x30) : ((x) + 0x37))
 
 typedef union
 {
@@ -57,5 +57,7 @@ typedef union
 		unsigned int 	uNibbleHHH	: 4;
 	};
 }TUINT;
+
+
 
 #endif

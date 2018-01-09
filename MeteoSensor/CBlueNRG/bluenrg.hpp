@@ -45,7 +45,7 @@ class CBlueNRGModule
 public:
    bool HandleRequest;
 
-
+   void Init                  (void);
    void Handle                (void);
    void HandleIRQ             (void);
 

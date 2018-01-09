@@ -44,10 +44,10 @@
 #define I2C_SENSOR                        I2C1
 #define PIN_HTS221_I2C_DRDY_PIN           LL_GPIO_PIN_10
 #define PIN_HTS221_I2C_DRDY_PORT          GPIOB
-#define I2C_ADDRESS_HTS221                0xBE
+#define I2C_ADDRESS_HTS221                0x5F
 #define PIN_LPS25HB_I2C_INT_PIN           LL_GPIO_PIN_4
 #define PIN_LPS25HB_I2C_INT_PORT          GPIOB
-#define I2C_ADDRESS_LPS25HB               0x00
+#define I2C_ADDRESS_LPS25HB               0x5D
 
 // LED
 #define PIN_LED_GREEN_PIN                 LL_GPIO_PIN_5
