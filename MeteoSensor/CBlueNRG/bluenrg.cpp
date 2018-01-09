@@ -1,10 +1,14 @@
 #include "main.h"
 
-const unsigned char CBlueNRGModule::PUBLIC_ADDRESS[6]       = { 0xA0, 0xB0, 0xC0, 0xD0, 0xE0, 0xF0, };
-const          char CBlueNRGModule::DEVICE_NAME[]           = "MeteoSensor";
+const unsigned char CBlueNRGModule::PUBLIC_ADDRESS[6]                      = { 0xA0, 0xB0, 0xC0, 0xD0, 0xE0, 0xF0, };
+const          char CBlueNRGModule::DEVICE_NAME[]                          = "MeteoSensor";
 
-const unsigned char CBlueNRGModule::SPI_WRITE_HEADER[5]     = { 0x0A, 0x00, 0x00, 0x00, 0x00, };
-const unsigned char CBlueNRGModule::SPI_READ_HEADER[5]      = { 0x0B, 0x00, 0x00, 0x00, 0x00, };
+const unsigned char CBlueNRGModule::SPI_WRITE_HEADER[5]                    = { 0x0A, 0x00, 0x00, 0x00, 0x00, };
+const unsigned char CBlueNRGModule::SPI_READ_HEADER[5]                     = { 0x0B, 0x00, 0x00, 0x00, 0x00, };
+
+const unsigned char CBlueNRGModule::SERVICE_UUID_ENVIRONMENTAL_SENSOR[2]   = { 0x1A, 0x18, };
+const unsigned char CBlueNRGModule::CHARACTERISTIC_UUID_TEMPERATURE[2]     = { 0x6E, 0x2A, };
+const unsigned char CBlueNRGModule::CHARACTERISTIC_UUID_HUMIDITY[2]        = { 0x6F, 0x2A, };
 
 void CBlueNRGModule::Init(void)
 {
@@ -22,7 +26,7 @@ void CBlueNRGModule::Handle(void)
    switch(State)
    {
    case STATE_SET_PUBLIC_ADDRESS:
-      Log.StrBlobR("BLE set public address: ", (unsigned char*)PUBLIC_ADDRESS, sizeof(PUBLIC_ADDRESS));
+      Log.StrBlobR("BLE public address set: ", (unsigned char*)PUBLIC_ADDRESS, sizeof(PUBLIC_ADDRESS));
       CmdWriteConfigData(0x00, sizeof(PUBLIC_ADDRESS), (void*)PUBLIC_ADDRESS);
       State = STATE_GATT_INIT;
       break;
@@ -36,14 +40,32 @@ void CBlueNRGModule::Handle(void)
    case STATE_GAP_INIT:
       Log.Str("BLE GAP Init\r");
       CmdGapInit();
-      State = STATE_UPDATE_NAME_CHAR;
+      State = STATE_CHAR_UPDATE_DEVICE_NAME;
       break;
 
-   case STATE_UPDATE_NAME_CHAR:
-      Log.Str("BLE Update Name: ");
+   case STATE_CHAR_UPDATE_DEVICE_NAME:
+      Log.Str("BLE char update [DEVICE_NAME]: ");
       Log.Str(DEVICE_NAME);
       Log.Str("\r");
       CmdGattUpdateCharValue(u16ServiceHandle, u16DeviceNameCharHandle, 0, strlen(DEVICE_NAME), DEVICE_NAME);
+      State = STATE_SERVICE_ADD_ENVIRONMENTAL_SENSOR;
+      break;
+
+   case STATE_SERVICE_ADD_ENVIRONMENTAL_SENSOR:
+      Log.Str("BLE service add [ENVIRONMENTAL SENSING]\r");
+      CmdGattAddService(UUID_TYPE_16, SERVICE_UUID_ENVIRONMENTAL_SENSOR, PRIMARY_SERVICE, 7, &u16ServiceHandleEnvironmentalSensing);
+      State = STATE_CHAR_ADD_TEMPERATURE;
+      break;
+
+   case STATE_CHAR_ADD_TEMPERATURE:
+      Log.Str("BLE char add [TEMPERATURE]\r");
+      CmdGattAddChar(u16ServiceHandleEnvironmentalSensing, UUID_TYPE_16, CHARACTERISTIC_UUID_TEMPERATURE, 2, CHAR_PROP_READ, 0, 0x04, 16, 0, &u16CharHandleTemperature);
+      State = STATE_CHAR_ADD_HUMIDITY;
+      break;
+
+   case STATE_CHAR_ADD_HUMIDITY:
+      Log.Str("BLE char add [HUMIDITY]\r");
+      CmdGattAddChar(u16ServiceHandleEnvironmentalSensing, UUID_TYPE_16, CHARACTERISTIC_UUID_HUMIDITY, 2, CHAR_PROP_READ, 0, 0x04, 16, 0, &u16CharHandleHumidity);
       State = STATE_SET_DISCOVERABLE;
       break;
 
@@ -183,6 +205,28 @@ void CBlueNRGModule::EventCommandComplete(unsigned short u16OPCode, void* pRetur
          u16ServiceHandle        = pResp->u16ServiceHandle;
          u16DeviceNameCharHandle = pResp->u16DeviceNameCharHandle;
          u16AppearanceCharHandle = pResp->u16AppearanceCharHandle;
+         break;
+      }
+
+      case CMD_OPCODE_GATT_ADD_SERVICE:
+      {
+         TCmdRespGattAddService *pResp = (TCmdRespGattAddService*)pReturn;
+         if(pResp->u8Status == 0 && p16ServiceHandle != NULL)
+         {
+            *p16ServiceHandle = pResp->u16ServiceHandle;
+            p16ServiceHandle  = NULL;
+         }
+         break;
+      }
+
+      case CMD_OPCODE_GATT_ADD_CHARACTERISTIC:
+      {
+         TCmdRespGattAddChar *pResp = (TCmdRespGattAddChar*)pReturn;
+         if(pResp->u8Status == 0 && p16CharHandle != NULL)
+         {
+            *p16CharHandle    = pResp->u16CharHandle;
+            p16CharHandle     = NULL;
+         }
          break;
       }
    }

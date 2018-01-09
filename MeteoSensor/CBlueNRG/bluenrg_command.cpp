@@ -30,6 +30,74 @@ int CBlueNRGModule::CmdGattInit(void)
    return SendCommand(CMD_OPCODE_GATT_INIT, NULL, 0);
 }
 
+int CBlueNRGModule::CmdGattAddService(unsigned char u8UUIDType, const unsigned char* U8UUID, unsigned char u8ServiceType, unsigned char u8MaxAttributeRecords, unsigned short* p16ServiceHandle)
+{
+   this->p16ServiceHandle = p16ServiceHandle;
+
+   if(u8UUIDType == UUID_TYPE_128)
+   {
+      TCmdParamsGattAddServiceUUID128  Params;
+
+      Params.u8UUIDType             = u8UUIDType;
+      Params.u8ServiceType          = u8ServiceType;
+      Params.u8MaxAttributeRecords  = u8MaxAttributeRecords;
+      memcpy(Params.U8UUID, U8UUID, 16);
+
+      return SendCommand(CMD_OPCODE_GATT_ADD_SERVICE, &Params, sizeof(Params));
+   }
+   else if(u8UUIDType == UUID_TYPE_16)
+   {
+      TCmdParamsGattAddServiceUUID16  Params;
+
+      Params.u8UUIDType             = u8UUIDType;
+      Params.u8ServiceType          = u8ServiceType;
+      Params.u8MaxAttributeRecords  = u8MaxAttributeRecords;
+      memcpy(Params.U8UUID, U8UUID, 2);
+
+      return SendCommand(CMD_OPCODE_GATT_ADD_SERVICE, &Params, sizeof(Params));
+   }
+   else return 0;
+}
+
+int CBlueNRGModule::CmdGattAddChar(unsigned short u16ServiceHandle, unsigned char u8UUIDType, const unsigned char* U8UUID, unsigned char u8ValueLength, unsigned char u8Properties, unsigned char u8Permissions, unsigned char u8EventMask, unsigned char u8EncryptKeySize, unsigned char u8ValueVarLen, unsigned short* p16CharHandle)
+{
+   this->p16CharHandle = p16CharHandle;
+
+   if(u8UUIDType == UUID_TYPE_128)
+   {
+      TCmdParamsGattAddCharUUID128 Params;
+
+      Params.u16ServiceHandle       = u16ServiceHandle;
+      Params.u8UUIDType             = u8UUIDType;
+      Params.u8ValueLength          = u8ValueLength;
+      Params.u8Properties           = u8Properties;
+      Params.u8Permissions          = u8Permissions;
+      Params.u8EventMask            = u8EventMask;
+      Params.u8EncryptKeySize       = u8EncryptKeySize;
+      Params.u8ValueVarLen          = u8ValueVarLen;
+      memcpy(Params.U8UUID, U8UUID, 16);
+
+      return SendCommand(CMD_OPCODE_GATT_ADD_CHARACTERISTIC, &Params, sizeof(Params));
+   }
+   else if(u8UUIDType == UUID_TYPE_16)
+   {
+      TCmdParamsGattAddCharUUID16 Params;
+
+      Params.u16ServiceHandle       = u16ServiceHandle;
+      Params.u8UUIDType             = u8UUIDType;
+      Params.u8ValueLength          = u8ValueLength;
+      Params.u8Properties           = u8Properties;
+      Params.u8Permissions          = u8Permissions;
+      Params.u8EventMask            = u8EventMask;
+      Params.u8EncryptKeySize       = u8EncryptKeySize;
+      Params.u8ValueVarLen          = u8ValueVarLen;
+      memcpy(Params.U8UUID, U8UUID, 2);
+
+      return SendCommand(CMD_OPCODE_GATT_ADD_CHARACTERISTIC, &Params, sizeof(Params));
+   }
+   else return 0;
+}
+
 int CBlueNRGModule::CmdGattUpdateCharValue(unsigned short u16ServiceHandle, unsigned short u16CharacteristicHandle, unsigned char u8ValueOffset, unsigned char u8ValueLength, const void* pValue)
 {
    unsigned char U8Params[sizeof(TCmdParamsGattUpdateChar) + u8ValueLength];
