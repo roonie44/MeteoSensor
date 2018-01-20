@@ -5,15 +5,17 @@
 
 class CBlueNRGModule
 {
-   static const unsigned char PUBLIC_ADDRESS[6];
-   static const          char DEVICE_NAME[];
+   const unsigned char  PUBLIC_ADDRESS[6]                      = { 0xA0, 0xB0, 0xC0, 0xD0, 0xE0, 0xF0, };
+   const          char  DEVICE_NAME[12]                        = "MeteoSensor";
 
-   static const unsigned char SPI_WRITE_HEADER[5];
-   static const unsigned char SPI_READ_HEADER[5];
+   const unsigned char  SPI_WRITE_HEADER[5]                    = { 0x0A, 0x00, 0x00, 0x00, 0x00, };
+   const unsigned char  SPI_READ_HEADER[5]                     = { 0x0B, 0x00, 0x00, 0x00, 0x00, };
 
-   static const unsigned char SERVICE_UUID_ENVIRONMENTAL_SENSOR[2];
-   static const unsigned char CHARACTERISTIC_UUID_TEMPERATURE[2];
-   static const unsigned char CHARACTERISTIC_UUID_HUMIDITY[2];
+   const unsigned char  SERVICE_UUID_ENVIRONMENTAL_SENSOR[2]   = { 0x1A, 0x18, };
+   const unsigned char  CHARACTERISTIC_UUID_TEMPERATURE[2]     = { 0x6E, 0x2A, };
+   const unsigned char  CHARACTERISTIC_UUID_HUMIDITY[2]        = { 0x6F, 0x2A, };
+
+   const unsigned short APPEARANCE = 1344; // Generic sensor
 
    enum eState
    {
@@ -21,6 +23,7 @@ class CBlueNRGModule
       STATE_GATT_INIT,
       STATE_GAP_INIT,
       STATE_CHAR_UPDATE_DEVICE_NAME,
+      STATE_CHAR_UPDATE_APPEARANCE,
       STATE_SERVICE_ADD_ENVIRONMENTAL_SENSOR,
       STATE_CHAR_ADD_TEMPERATURE,
       STATE_CHAR_ADD_HUMIDITY,

@@ -1,14 +1,14 @@
 #include "main.h"
 
-const unsigned char CBlueNRGModule::PUBLIC_ADDRESS[6]                      = { 0xA0, 0xB0, 0xC0, 0xD0, 0xE0, 0xF0, };
-const          char CBlueNRGModule::DEVICE_NAME[]                          = "MeteoSensor";
+//const unsigned char CBlueNRGModule::PUBLIC_ADDRESS[6]
+//const          char CBlueNRGModule::DEVICE_NAME[]
 
-const unsigned char CBlueNRGModule::SPI_WRITE_HEADER[5]                    = { 0x0A, 0x00, 0x00, 0x00, 0x00, };
-const unsigned char CBlueNRGModule::SPI_READ_HEADER[5]                     = { 0x0B, 0x00, 0x00, 0x00, 0x00, };
+//const unsigned char CBlueNRGModule::SPI_WRITE_HEADER[5]
+//const unsigned char CBlueNRGModule::SPI_READ_HEADER[5]
 
-const unsigned char CBlueNRGModule::SERVICE_UUID_ENVIRONMENTAL_SENSOR[2]   = { 0x1A, 0x18, };
-const unsigned char CBlueNRGModule::CHARACTERISTIC_UUID_TEMPERATURE[2]     = { 0x6E, 0x2A, };
-const unsigned char CBlueNRGModule::CHARACTERISTIC_UUID_HUMIDITY[2]        = { 0x6F, 0x2A, };
+//const unsigned char CBlueNRGModule::SERVICE_UUID_ENVIRONMENTAL_SENSOR[2]
+//const unsigned char CBlueNRGModule::CHARACTERISTIC_UUID_TEMPERATURE[2]
+//const unsigned char CBlueNRGModule::CHARACTERISTIC_UUID_HUMIDITY[2]
 
 void CBlueNRGModule::Init(void)
 {
@@ -48,7 +48,16 @@ void CBlueNRGModule::Handle(void)
       Log.Str(DEVICE_NAME);
       Log.Str("\r");
       CmdGattUpdateCharValue(u16ServiceHandle, u16DeviceNameCharHandle, 0, strlen(DEVICE_NAME), DEVICE_NAME);
+      State = STATE_CHAR_UPDATE_APPEARANCE;
+      break;
+
+   case STATE_CHAR_UPDATE_APPEARANCE:
+      //Log.StrHexR("BLE char update [APPEARANCE]: ", APPEARANCE, sizeof(APPEARANCE));
+      unsigned short temp;
+      //temp = APPEARANCE;
+      CmdGattUpdateCharValue(u16ServiceHandle, u16AppearanceCharHandle, 0, sizeof(APPEARANCE), &APPEARANCE);
       State = STATE_SERVICE_ADD_ENVIRONMENTAL_SENSOR;
+      //State = STATE_SET_DISCOVERABLE;
       break;
 
    case STATE_SERVICE_ADD_ENVIRONMENTAL_SENSOR:

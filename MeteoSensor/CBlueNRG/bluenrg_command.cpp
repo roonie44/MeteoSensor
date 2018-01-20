@@ -116,7 +116,7 @@ int CBlueNRGModule::CmdGapInit(void)
 {
    TCmdParamsGapInit Params;
 
-   Params.u8Role           = 0x01;  // Broadcaster
+   Params.u8Role           = 0x01;  // Peripherial
    Params.u8PrivacyEnabled = 0;
    Params.u8NameCharLength = strlen(DEVICE_NAME);
 
