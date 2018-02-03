@@ -2,9 +2,10 @@
 
 void CI2CModule::Write(unsigned int u32SlaveAddress, unsigned char *pData, int s32Length)
 {
-   Log.Str("I2C write ");
+   Log.StrHex("I2C [", u32SlaveAddress, 1);
+   Log.Str("] write ");
 
-   MODIFY_REG  (I2C_SENSOR->CR2, I2C_CR2_SADD, I2C_ADDRESS_HTS221 << 1);
+   MODIFY_REG  (I2C_SENSOR->CR2, I2C_CR2_SADD, u32SlaveAddress << 1);
    MODIFY_REG  (I2C_SENSOR->CR2, I2C_CR2_NBYTES, s32Length << I2C_CR2_NBYTES_Pos);
    CLEAR_BIT   (I2C_SENSOR->CR2, I2C_CR2_RD_WRN);  // 0 = write
    //SET_BIT     (I2C_SENSOR->CR2, I2C_CR2_AUTOEND);
@@ -39,9 +40,10 @@ void CI2CModule::Write(unsigned int u32SlaveAddress, unsigned char u8Data)
 
 void CI2CModule::Read(unsigned int u32SlaveAddress, void *pData, int s32Length)
 {
-   Log.Str("I2C read ");
+   Log.StrHex("I2C [", u32SlaveAddress, 1);
+   Log.Str("] read ");
 
-   MODIFY_REG  (I2C_SENSOR->CR2, I2C_CR2_SADD, I2C_ADDRESS_HTS221 << 1);
+   MODIFY_REG  (I2C_SENSOR->CR2, I2C_CR2_SADD, u32SlaveAddress << 1);
    MODIFY_REG  (I2C_SENSOR->CR2, I2C_CR2_NBYTES, s32Length << I2C_CR2_NBYTES_Pos);
    SET_BIT     (I2C_SENSOR->CR2, I2C_CR2_RD_WRN);  // 1 = read
    //SET_BIT     (I2C_SENSOR->CR2, I2C_CR2_AUTOEND);
