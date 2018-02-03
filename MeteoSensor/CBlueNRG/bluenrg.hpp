@@ -13,6 +13,7 @@ class CBlueNRGModule
    static const unsigned char SPI_READ_HEADER[5];
 
    static const unsigned char SERVICE_UUID_ENVIRONMENTAL_SENSOR[2];
+   static const unsigned char CHARACTERISTIC_UUID_PRESSURE[2];
    static const unsigned char CHARACTERISTIC_UUID_TEMPERATURE[2];
    static const unsigned char CHARACTERISTIC_UUID_HUMIDITY[2];
 
@@ -28,6 +29,7 @@ class CBlueNRGModule
       STATE_SERVICE_ADD_ENVIRONMENTAL_SENSOR,
       STATE_CHAR_ADD_TEMPERATURE,
       STATE_CHAR_ADD_HUMIDITY,
+      STATE_CHAR_ADD_PRESSURE,
       STATE_SET_DISCOVERABLE,
       STATE_ADVERTISING,
       STATE_CONNECTED,
