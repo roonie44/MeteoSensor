@@ -1,14 +1,14 @@
 #include "main.h"
 
-//const unsigned char CBlueNRGModule::PUBLIC_ADDRESS[6]
-//const          char CBlueNRGModule::DEVICE_NAME[]
+const unsigned char CBlueNRGModule::PUBLIC_ADDRESS[6]                      = { 0xA0, 0xB0, 0xC0, 0xD0, 0xE0, 0xF0, };
+const          char CBlueNRGModule::DEVICE_NAME[]                          = "MeteoSensor";
 
-//const unsigned char CBlueNRGModule::SPI_WRITE_HEADER[5]
-//const unsigned char CBlueNRGModule::SPI_READ_HEADER[5]
+const unsigned char CBlueNRGModule::SPI_WRITE_HEADER[5]                    = { 0x0A, 0x00, 0x00, 0x00, 0x00, };
+const unsigned char CBlueNRGModule::SPI_READ_HEADER[5]                     = { 0x0B, 0x00, 0x00, 0x00, 0x00, };
 
-//const unsigned char CBlueNRGModule::SERVICE_UUID_ENVIRONMENTAL_SENSOR[2]
-//const unsigned char CBlueNRGModule::CHARACTERISTIC_UUID_TEMPERATURE[2]
-//const unsigned char CBlueNRGModule::CHARACTERISTIC_UUID_HUMIDITY[2]
+const unsigned char CBlueNRGModule::SERVICE_UUID_ENVIRONMENTAL_SENSOR[2]   = { 0x1A, 0x18, };
+const unsigned char CBlueNRGModule::CHARACTERISTIC_UUID_TEMPERATURE[2]     = { 0x6E, 0x2A, };
+const unsigned char CBlueNRGModule::CHARACTERISTIC_UUID_HUMIDITY[2]        = { 0x6F, 0x2A, };
 
 void CBlueNRGModule::Init(void)
 {
@@ -62,19 +62,19 @@ void CBlueNRGModule::Handle(void)
 
    case STATE_SERVICE_ADD_ENVIRONMENTAL_SENSOR:
       Log.Str("BLE service add [ENVIRONMENTAL SENSING]\r");
-      CmdGattAddService(UUID_TYPE_16, SERVICE_UUID_ENVIRONMENTAL_SENSOR, PRIMARY_SERVICE, 7, &u16ServiceHandleEnvironmentalSensing);
+      CmdGattAddService(UUID_TYPE_16, SERVICE_UUID_ENVIRONMENTAL_SENSOR, PRIMARY_SERVICE, 7, &Service.EnvironmentalSensing.u16Handle);
       State = STATE_CHAR_ADD_TEMPERATURE;
       break;
 
    case STATE_CHAR_ADD_TEMPERATURE:
       Log.Str("BLE char add [TEMPERATURE]\r");
-      CmdGattAddChar(u16ServiceHandleEnvironmentalSensing, UUID_TYPE_16, CHARACTERISTIC_UUID_TEMPERATURE, 2, CHAR_PROP_READ, 0, 0x04, 16, 0, &u16CharHandleTemperature);
+      CmdGattAddChar(Service.EnvironmentalSensing.u16Handle, UUID_TYPE_16, CHARACTERISTIC_UUID_TEMPERATURE, 2, CHAR_PROP_READ, 0, 0x04, 16, 0, &Service.EnvironmentalSensing.Characteristic.Temperature.u16Handle, &Service.EnvironmentalSensing.Characteristic.Temperature.Value.u16Handle);
       State = STATE_CHAR_ADD_HUMIDITY;
       break;
 
    case STATE_CHAR_ADD_HUMIDITY:
       Log.Str("BLE char add [HUMIDITY]\r");
-      CmdGattAddChar(u16ServiceHandleEnvironmentalSensing, UUID_TYPE_16, CHARACTERISTIC_UUID_HUMIDITY, 2, CHAR_PROP_READ, 0, 0x04, 16, 0, &u16CharHandleHumidity);
+      CmdGattAddChar(Service.EnvironmentalSensing.u16Handle, UUID_TYPE_16, CHARACTERISTIC_UUID_HUMIDITY, 2, CHAR_PROP_READ, 0, 0x04, 16, 0, &Service.EnvironmentalSensing.Characteristic.Humidity.u16Handle, &Service.EnvironmentalSensing.Characteristic.Humidity.Value.u16Handle);
       State = STATE_SET_DISCOVERABLE;
       break;
 
@@ -89,6 +89,46 @@ void CBlueNRGModule::Handle(void)
 
    case STATE_CONNECTED:
       break;
+
+   case STATE_UPDATE_DATA:
+      if(Service.EnvironmentalSensing.Characteristic.Temperature.RequestRead == true && Service.EnvironmentalSensing.Characteristic.Temperature.Updated == false)
+         break;
+      if(Service.EnvironmentalSensing.Characteristic.Humidity.RequestRead == true && Service.EnvironmentalSensing.Characteristic.Humidity.Updated == false)
+         break;
+      if(Service.EnvironmentalSensing.Characteristic.Pressure.RequestRead == true && Service.EnvironmentalSensing.Characteristic.Pressure.Updated == false)
+         break;
+      CmdGattAllowRead(Connection.u16Handle);
+
+      Service.EnvironmentalSensing.Characteristic.Temperature.RequestRead  = false;
+      Service.EnvironmentalSensing.Characteristic.Humidity.RequestRead     = false;
+      Service.EnvironmentalSensing.Characteristic.Pressure.RequestRead     = false;
+      State = STATE_CONNECTED;
+      break;
+   }
+}
+
+void CBlueNRGModule::Callback(unsigned int u32CallbackId, void *pValue)
+{
+   if (u32CallbackId == Service.EnvironmentalSensing.Characteristic.Temperature.Value.u16Handle)
+   {
+      Service.EnvironmentalSensing.Characteristic.Temperature.Value.s16Value  = *(signed short*)pValue;
+      CmdGattUpdateCharValue(Service.EnvironmentalSensing.u16Handle, Service.EnvironmentalSensing.Characteristic.Temperature.u16Handle, 0, sizeof(Service.EnvironmentalSensing.Characteristic.Temperature.Value.s16Value), &Service.EnvironmentalSensing.Characteristic.Temperature.Value.s16Value);
+      Service.EnvironmentalSensing.Characteristic.Temperature.Updated   = true;
+      return;
+   }
+   if (u32CallbackId == Service.EnvironmentalSensing.Characteristic.Humidity.Value.u16Handle)
+   {
+      Service.EnvironmentalSensing.Characteristic.Humidity.Value.u16Value  = *(unsigned short*)pValue;
+      CmdGattUpdateCharValue(Service.EnvironmentalSensing.u16Handle, Service.EnvironmentalSensing.Characteristic.Humidity.u16Handle, 0, sizeof(Service.EnvironmentalSensing.Characteristic.Humidity.Value.u16Value), &Service.EnvironmentalSensing.Characteristic.Humidity.Value.u16Value);
+      Service.EnvironmentalSensing.Characteristic.Humidity.Updated   = true;
+      return;
+   }
+   if (u32CallbackId == Service.EnvironmentalSensing.Characteristic.Pressure.Value.u16Handle)
+   {
+      Service.EnvironmentalSensing.Characteristic.Pressure.Value.u32Value  = *(unsigned int*)pValue;
+      CmdGattUpdateCharValue(Service.EnvironmentalSensing.u16Handle, Service.EnvironmentalSensing.Characteristic.Pressure.u16Handle, 0, sizeof(Service.EnvironmentalSensing.Characteristic.Pressure.Value.u32Value), &Service.EnvironmentalSensing.Characteristic.Pressure.Value.u32Value);
+      Service.EnvironmentalSensing.Characteristic.Pressure.Updated   = true;
+      return;
    }
 }
 
@@ -141,114 +181,6 @@ int CBlueNRGModule::HandlePendingData(void)
       Spi.DisableCS();
    }
    return 0;
-}
-
-void CBlueNRGModule::ParseEvent(TEventPacket* pEventPacket, int s32EventPacketLen)
-{
-   Log.Str("BLE event");
-
-   switch(pEventPacket->u8EventCode)
-   {
-      case HCI_EVENT_CMD_STATUS:
-      {
-         TEventCmdStatusParams *pParams;
-         pParams = (TEventCmdStatusParams*)pEventPacket->U8Param;
-         Log.StrHex(" CMD ", pParams->u16OPCode, 2);
-         Log.StrHexR(" err ", pParams->u8Status, 1);
-         break;
-      }
-
-      case HCI_EVENT_CMD_COMPLETE:
-      {
-         TEventCmdCompleteParams *pParams;
-         pParams = (TEventCmdCompleteParams*)pEventPacket->U8Param;
-         Log.StrHex(" CMD ", pParams->u16OPCode, 2);
-         Log.StrBlobR(" ret ", pParams->U8Return, pEventPacket->u8ParamLength - sizeof(TEventCmdCompleteParams));
-         EventCommandComplete(pParams->u16OPCode, pParams->U8Return, pEventPacket->u8ParamLength - sizeof(TEventCmdCompleteParams));
-         break;
-      }
-
-      case HCI_EVENT_DISCONNECT_COMPLETE:
-      {
-         Log.Str(" Disconnected\r");
-         EventDisconnected();
-         break;
-      }
-
-      case HCI_EVENT_LE_META:
-      {
-         Log.Str(" Connected\r");
-         EventConnected();
-         break;
-      }
-
-      case HCI_EVENT_VENDOR:
-      {
-         TEventVendorParams *pParams;
-         pParams = (TEventVendorParams*)pEventPacket->U8Param;
-         switch(pParams->u16EventCode)
-         {
-         case EVT_CODE_BLUE_INITIALIZED:
-            Log.StrHexR(" BlueNRG init code ", pParams->u8ReasonCode, 1);
-            break;
-
-         default:
-            Log.StrBlobR(" VENDOR other ", (unsigned char*)pEventPacket, s32EventPacketLen);
-            break;
-         }
-         break;
-      }
-
-      default:
-         Log.StrBlobR(" UNKOWN ", (unsigned char*)pEventPacket, s32EventPacketLen);
-   }
-}
-
-void CBlueNRGModule::EventCommandComplete(unsigned short u16OPCode, void* pReturn, int s32ReturnLen)
-{
-   switch(u16OPCode)
-   {
-      case CMD_OPCODE_GAP_INIT:
-      {
-         TCmdRespGapInit *pResp = (TCmdRespGapInit*)pReturn;
-         u16ServiceHandle        = pResp->u16ServiceHandle;
-         u16DeviceNameCharHandle = pResp->u16DeviceNameCharHandle;
-         u16AppearanceCharHandle = pResp->u16AppearanceCharHandle;
-         break;
-      }
-
-      case CMD_OPCODE_GATT_ADD_SERVICE:
-      {
-         TCmdRespGattAddService *pResp = (TCmdRespGattAddService*)pReturn;
-         if(pResp->u8Status == 0 && p16ServiceHandle != NULL)
-         {
-            *p16ServiceHandle = pResp->u16ServiceHandle;
-            p16ServiceHandle  = NULL;
-         }
-         break;
-      }
-
-      case CMD_OPCODE_GATT_ADD_CHARACTERISTIC:
-      {
-         TCmdRespGattAddChar *pResp = (TCmdRespGattAddChar*)pReturn;
-         if(pResp->u8Status == 0 && p16CharHandle != NULL)
-         {
-            *p16CharHandle    = pResp->u16CharHandle;
-            p16CharHandle     = NULL;
-         }
-         break;
-      }
-   }
-}
-
-void CBlueNRGModule::EventConnected(void)
-{
-   State = STATE_CONNECTED;
-}
-
-void CBlueNRGModule::EventDisconnected(void)
-{
-   State = STATE_SET_DISCOVERABLE;
 }
 
 void CBlueNRGModule::HandleIRQ(void)

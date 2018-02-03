@@ -51,42 +51,9 @@ enum eCharacteristicProperties
 };
 
 #pragma pack(1)
-struct TCommandPacket
-{
-   unsigned char  u8PacketType;
-   unsigned short u16OPCode;
-   unsigned char  u8ParamsLen;
-   unsigned char  U8Param[0];
-};
 
-struct TEventPacket
-{
-   unsigned char  u8PacketType;
-   unsigned char  u8EventCode;
-   unsigned char  u8ParamLength;
-   unsigned char  U8Param[0];
-};
 
-struct TEventCmdStatusParams
-{
-   unsigned char  u8Status;
-   unsigned char  u8NCmd;
-   unsigned short u16OPCode;
-};
 
-struct TEventCmdCompleteParams
-{
-   unsigned char  u8NCmd;
-   unsigned short u16OPCode;
-   unsigned char  U8Return[0];
-};
-
-#define EVT_CODE_BLUE_INITIALIZED      0x0001
-struct TEventVendorParams
-{
-   unsigned short u16EventCode;
-   unsigned char  u8ReasonCode;
-};
 #pragma pack()
 
 

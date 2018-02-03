@@ -26,11 +26,28 @@ void CSensorModule::Init(void)
 
 void CSensorModule::Handle(void)
 {
-   //HTS221_PowerUp();
-   HTS221_NewMeasurement();
-   HTS221_ReadTemperature();
-   HTS221_ReadHumidity();
+   HandleRequest = false;
+
+   if(RequestDataType != NONE)
+   {
+      //HTS221_PowerUp();
+      HTS221_NewMeasurement();
+   }
+
+   if(RequestDataType == TEMPERATURE)
+      HTS221_ReadTemperature();
+
+   if(RequestDataType == HUMIDITY)
+      HTS221_ReadHumidity();
+
    //HTS221_PowerDown();
+}
+
+void CSensorModule::DataRequest(eDataType DataType, unsigned int u32CallbackId)
+{
+   this->RequestDataType   = DataType;
+   this->HandleRequest     = true;
+   this->u32CallbackId     = u32CallbackId;
 }
 
 void CSensorModule::HTS221_PowerUp(void)
@@ -95,6 +112,11 @@ void CSensorModule::HTS221_ReadTemperature(void)
 
    Log.StrDec("SEN Temp ", s32Temperature / 8);
    Log.StrDecR(".", (s32Temperature % 8) * 125);
+
+   s32Temperature *= 100;
+   s32Temperature /= 8;
+
+   BlueNRG.Callback(u32CallbackId, &s32Temperature);
 }
 
 void CSensorModule::HTS221_ReadHumidity(void)
@@ -113,4 +135,9 @@ void CSensorModule::HTS221_ReadHumidity(void)
 
    Log.StrDec("SEN Humi ", s32Humidity / 2);
    Log.Str(" %\r");
+
+   s32Humidity *= 100;
+   s32Humidity /= 2;
+
+   BlueNRG.Callback(u32CallbackId, &s32Humidity);
 }

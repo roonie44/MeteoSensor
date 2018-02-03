@@ -3,6 +3,22 @@
 
 class CSensorModule
 {
+public:
+   enum eDataType
+   {
+      NONE,
+      TEMPERATURE,
+      HUMIDITY,
+      PRESSURE,
+   };
+
+   bool  HandleRequest;
+
+   void Init   (void);
+   void Handle (void);
+   void DataRequest  (eDataType DataType, unsigned int u32CallbackId);
+
+private:
    static const unsigned char REG_ADDR_HTS221_WHO_AM_I      = 0x0F;
    static const unsigned char REG_ADDR_HTS221_CTRL1         = 0x20;
    static const unsigned char REG_ADDR_HTS221_CTRL2         = 0x21;
@@ -10,7 +26,6 @@ class CSensorModule
    static const unsigned char REG_ADDR_HTS221_HUMI_OUT      = (0x28 | 0x80);  // Autoincrement
    static const unsigned char REG_ADDR_HTS221_TEMP_OUT      = (0x2A | 0x80);  // Autoincrement
    static const unsigned char REG_ADDR_HTS221_CALIB_DATA    = (0x30 | 0x80);  // Autoincrement
-
 
 #pragma pack(1)
    struct THTS221CalibData
@@ -41,17 +56,14 @@ class CSensorModule
    signed short   s16CalibrationH0;
    signed short   s16CalibrationH1;
 
+   eDataType      RequestDataType;
+   unsigned int   u32CallbackId;
+
    void HTS221_PowerUp           (void);
    void HTS221_PowerDown         (void);
    void HTS221_NewMeasurement    (void);
    void HTS221_ReadTemperature   (void);
    void HTS221_ReadHumidity      (void);
-
-public:
-   bool  HandleRequest;
-
-   void Init   (void);
-   void Handle (void);
 };
 
 #endif /* SENSOR_HPP_ */

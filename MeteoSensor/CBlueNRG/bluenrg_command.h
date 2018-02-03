@@ -2,6 +2,14 @@
 #define BLUENRG_COMMAND_H_
 
 #pragma pack(1)
+struct TCommandPacket
+{
+   unsigned char  u8PacketType;
+   unsigned short u16OPCode;
+   unsigned char  u8ParamsLen;
+   unsigned char  U8Param[0];
+};
+
 #define CMD_OPCODE_WRITE_CONFIG_DATA   0xFC0C
 struct TCmdParamsWriteConfigData
 {
@@ -74,6 +82,12 @@ struct TCmdParamsGattUpdateChar
    unsigned char  u8ValueOffset;
    unsigned char  u8ValueLength;
    unsigned char* U8Value[0];
+};
+
+#define CMD_OPCODE_GATT_ALLOW_READ  0xFD27
+struct TCmdParamsGattAllowRead
+{
+   unsigned short u16ConnectionHandle;
 };
 
 /******************************************************************************/

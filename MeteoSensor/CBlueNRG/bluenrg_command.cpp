@@ -59,9 +59,10 @@ int CBlueNRGModule::CmdGattAddService(unsigned char u8UUIDType, const unsigned c
    else return 0;
 }
 
-int CBlueNRGModule::CmdGattAddChar(unsigned short u16ServiceHandle, unsigned char u8UUIDType, const unsigned char* U8UUID, unsigned char u8ValueLength, unsigned char u8Properties, unsigned char u8Permissions, unsigned char u8EventMask, unsigned char u8EncryptKeySize, unsigned char u8ValueVarLen, unsigned short* p16CharHandle)
+int CBlueNRGModule::CmdGattAddChar(unsigned short u16ServiceHandle, unsigned char u8UUIDType, const unsigned char* U8UUID, unsigned char u8ValueLength, unsigned char u8Properties, unsigned char u8Permissions, unsigned char u8EventMask, unsigned char u8EncryptKeySize, unsigned char u8ValueVarLen, unsigned short* p16CharHandle, unsigned short* p16CharValueHandle)
 {
-   this->p16CharHandle = p16CharHandle;
+   this->p16CharHandle              = p16CharHandle;
+   this->p16CharValueHandle         = p16CharValueHandle;
 
    if(u8UUIDType == UUID_TYPE_128)
    {
@@ -110,6 +111,15 @@ int CBlueNRGModule::CmdGattUpdateCharValue(unsigned short u16ServiceHandle, unsi
    memcpy(pParams->U8Value, pValue, u8ValueLength);
 
    return SendCommand(CMD_OPCODE_GATT_UPDATE_CHAR_VALUE, U8Params, sizeof(U8Params));
+}
+
+int CBlueNRGModule::CmdGattAllowRead(unsigned short u16ConnectionHandle)
+{
+   TCmdParamsGattAllowRead Params;
+
+   Params.u16ConnectionHandle = u16ConnectionHandle;
+
+   return SendCommand(CMD_OPCODE_GATT_ALLOW_READ, &Params, sizeof(Params));
 }
 
 int CBlueNRGModule::CmdGapInit(void)
