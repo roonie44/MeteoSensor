@@ -226,10 +226,13 @@ void CSensorModule::LPS25HB_ReadPressure(void)
    I2C.Write(I2C_ADDRESS_LPS25HB, REG_ADDR_LPS25HB_PRESS_OUT_XL);
    I2C.Read(I2C_ADDRESS_LPS25HB, &U8RawData[0], sizeof(U8RawData));
 
+   // Pressure in 1/4096 [hPa]
    u32Pressure = (unsigned int)U8RawData[0] | (unsigned int)U8RawData[1] << 8 | (unsigned int)U8RawData[2] << 16;
-   u32Pressure = (u32Pressure + 4096/2) / 4096;
 
-   Log.StrDecR("SEN Pressure ", u32Pressure);
+   Log.StrDecR("SEN Pressure ", u32Pressure / 4096);
+
+   // Pressure in 0.1 [Pa] = 1/4096 [hPa] * 1000 / 4096
+   u32Pressure = (u32Pressure * 250) / 1024;
 
    BlueNRG.Callback(u32CallbackId, &u32Pressure);
 }
