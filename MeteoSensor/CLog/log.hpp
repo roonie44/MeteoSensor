@@ -15,6 +15,7 @@ public:
    void  Init     (void);
    void  HandleTx (void);
    void  HandleRx (void);
+   void  Wait     (void);
 
    void  NewLine  (void);
    void  Str      (const char* pString);

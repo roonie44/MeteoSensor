@@ -16,10 +16,10 @@ void CLogModule::HandleTx(void)
 {
    int   s32DataToSend;
 
+   LL_DMA_DisableChannel(DMA1, DMA_CHANNEL_LOG_TX);
+
    if(s32IdxWrite == s32IdxSend)
       return;
-
-   LL_DMA_DisableChannel(DMA1, DMA_CHANNEL_LOG_TX);
 
    // Data not sent yet
    s32DataToSend = LL_DMA_GetDataLength(DMA1, DMA_CHANNEL_LOG_TX);
@@ -193,4 +193,9 @@ void CLogModule::HandleRx(void)
    LL_DMA_SetMemoryAddress(DMA1, DMA_CHANNEL_LOG_RX, (unsigned int)&U8InputBuffer[0]);
    LL_DMA_SetDataLength(DMA1, DMA_CHANNEL_LOG_RX, LOG_INPUT_BUFFER_SIZE);
    LL_DMA_EnableChannel(DMA1, DMA_CHANNEL_LOG_RX);
+}
+
+void CLogModule::Wait(void)
+{
+   while(LL_DMA_IsEnabledChannel(DMA1, DMA_CHANNEL_LOG_TX) != 0);
 }
