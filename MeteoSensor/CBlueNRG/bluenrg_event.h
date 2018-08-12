@@ -52,6 +52,15 @@ struct TEventParamsMetaConnectionComplete
    unsigned char  u8MasterClockLatency;
 };
 
+struct TEventParamsMetaConnectionUpdate
+{
+   unsigned char  u8Status;
+   unsigned short u16ConnectionHandle;
+   unsigned short u16ConnectionInterval;
+   unsigned short u16ConnectionLatency;
+   unsigned short u16SupervisionTimeout;
+};
+
 /******************************************************************************/
 
 struct TEventVSParams

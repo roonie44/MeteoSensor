@@ -50,8 +50,7 @@ void CLogModule::NewLine(void)
 {
    U8OutputBuffer[s32IdxWrite] = '\r';
    s32IdxWrite = (s32IdxWrite + 1) % sizeof(U8OutputBuffer);
-   if(LL_DMA_GetDataLength(DMA1, DMA_CHANNEL_LOG_TX) == 0)
-      HandleTx();
+   HandleTx();
 }
 
 void CLogModule::Str(const char* pString)
@@ -62,8 +61,7 @@ void CLogModule::Str(const char* pString)
       s32IdxWrite = (s32IdxWrite + 1) % sizeof(U8OutputBuffer);
       pString++;
    }
-   if(LL_DMA_GetDataLength(DMA1, DMA_CHANNEL_LOG_TX) == 0)
-      HandleTx();
+   HandleTx();
 }
 
 void CLogModule::Hex(unsigned int u32Number, unsigned int u32Size)
@@ -94,8 +92,7 @@ void CLogModule::Hex(unsigned int u32Number, unsigned int u32Size)
 	U8OutputBuffer[s32IdxWrite] 	= ASCII(Number.uNibbleLLL);
 	s32IdxWrite 						= (s32IdxWrite + 1) % sizeof(U8OutputBuffer);
 	}
-   if(LL_DMA_GetDataLength(DMA1, DMA_CHANNEL_LOG_TX) == 0)
-      HandleTx();
+   HandleTx();
 }
 
 void CLogModule::StrHex(const char* pString, unsigned int u32Number, unsigned int u32Size)
@@ -130,8 +127,7 @@ void CLogModule::Dec(unsigned int u32Number)
       U8OutputBuffer[s32IdxWrite] = ASCII(U8OutputDec[s32Len]);
       s32IdxWrite = (s32IdxWrite + 1) % sizeof(U8OutputBuffer);
    }
-   if(LL_DMA_GetDataLength(DMA1, DMA_CHANNEL_LOG_TX) == 0)
-      HandleTx();
+   HandleTx();
 }
 
 void CLogModule::StrDec(const char* pString, unsigned int u32Number)
@@ -159,6 +155,7 @@ void CLogModule::Blob(unsigned char* U8Blob, unsigned int u32Length)
       s32IdxWrite                   = (s32IdxWrite + 1) % sizeof(U8OutputBuffer);
       pBlob++;
    }
+   HandleTx();
 }
 
 void CLogModule::StrBlob(const char* pString, unsigned char* U8Blob, unsigned int u32Length)

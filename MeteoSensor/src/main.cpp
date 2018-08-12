@@ -2,6 +2,7 @@
 #include "init.h"
 
 CLogModule        Log;
+CPowerModule      Power;
 CSpiModule        Spi;
 CBlueNRGModule    BlueNRG;
 CI2CModule        I2C;
@@ -29,6 +30,8 @@ int main(void)
 
       if(Sensor.HandleRequest)
          Sensor.Handle();
+
+      Power.Handle();
    }
 }
 

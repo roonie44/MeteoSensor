@@ -19,6 +19,7 @@
 #include "types.h"
 
 #include "../CLog/log.hpp"
+#include "../CPower/power.hpp"
 #include "../CBlueNRG/spi.hpp"
 #include "../CBlueNRG/bluenrg.hpp"
 #include "../CSensor/i2c.hpp"
@@ -26,6 +27,7 @@
 
 
 extern CLogModule       Log;
+extern CPowerModule     Power;
 extern CSpiModule       Spi;
 extern CBlueNRGModule   BlueNRG;
 extern CI2CModule       I2C;

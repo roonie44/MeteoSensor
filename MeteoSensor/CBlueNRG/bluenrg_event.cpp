@@ -51,8 +51,16 @@ void CBlueNRGModule::ParseEvent(TEventPacket* pEventPacket, int s32EventPacketLe
             }
             break;
 
+            case 0x03:
+            {
+               TEventParamsMetaConnectionUpdate *pParams2;
+               pParams2 = (TEventParamsMetaConnectionUpdate*)pParams->U8Param;
+               Log.StrHexR(" Updated: conn ", pParams2->u16ConnectionHandle, 2);
+            }
+            break;
+
             default:
-               Log.StrBlobR(" META other", (unsigned char*)pEventPacket, s32EventPacketLen);
+               Log.StrBlobR(" META other ", (unsigned char*)pEventPacket, s32EventPacketLen);
 
          }
 
@@ -175,10 +183,12 @@ void CBlueNRGModule::EventConnected(unsigned short u16ConnectionHandle)
 {
    Connection.u16Handle = u16ConnectionHandle;
    State = STATE_CONNECTED;
+   LL_GPIO_SetOutputPin(PIN_LED_GREEN_PORT, PIN_LED_GREEN_PIN);
 }
 
 void CBlueNRGModule::EventDisconnectionComplete(unsigned short u16ConnectionHandle)
 {
    Connection.u16Handle = 0;
    State = STATE_SET_DISCOVERABLE;
+   LL_GPIO_ResetOutputPin(PIN_LED_GREEN_PORT, PIN_LED_GREEN_PIN);
 }
