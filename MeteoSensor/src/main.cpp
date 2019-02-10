@@ -21,7 +21,7 @@ int main(void)
    Log.Str("\r");
 
    Sensor.Init();
-   BlueNRG.Init();
+   //BlueNRG.Init();
 
    while(1)
    {
@@ -31,7 +31,7 @@ int main(void)
       if(Sensor.HandleRequest)
          Sensor.Handle();
 
-      Power.Handle();
+      //Power.Handle();
    }
 }
 
@@ -42,7 +42,15 @@ void CommandExecute(unsigned int u32CommandCode)
    switch(u32CommandCode)
    {
    case 1:
-      Sensor.Handle();
+      Sensor.DataRequest(CSensorModule::eDataType::TEMPERATURE, 0);
+      break;
+
+   case 2:
+      Sensor.DataRequest(CSensorModule::eDataType::HUMIDITY, 0);
+      break;
+
+   case 3:
+      Sensor.DataRequest(CSensorModule::eDataType::PRESSURE, 0);
       break;
    }
 }

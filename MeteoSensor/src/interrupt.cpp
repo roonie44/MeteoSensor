@@ -9,24 +9,24 @@ void SysTick_Handler(void)
 
 }
 
-void DMA1_Channel7_IRQHandler(void)
+void DMA1_Channel2_IRQHandler(void)
 {
    unsigned int ISR = DMA1->ISR;
 
-   if(ISR & DMA_ISR_TCIF7)
+   if(ISR & DMA_ISR_TCIF2)
    {
-      DMA1->IFCR |= DMA_IFCR_CTCIF7;
+      DMA1->IFCR |= DMA_IFCR_CTCIF2;
       Log.HandleTx();
    }
 }
 
-void USART2_IRQHandler(void)
+void USART3_IRQHandler(void)
 {
-   unsigned int ISR = USART2->ISR;
+   unsigned int ISR = USART3->ISR;
 
    if(ISR & USART_ISR_IDLE)
    {
-      USART2->ICR |= USART_ICR_IDLECF;
+      USART3->ICR |= USART_ICR_IDLECF;
       Log.HandleRx();
    }
 
@@ -73,12 +73,12 @@ void* g_pfnVectors[] __attribute__ ((section (".isr_vector"))) =
    (void*)&Default_Handler,            // EXTI3_IRQHandler,
    (void*)&Default_Handler,            // EXTI4_IRQHandler,
    (void*)&Default_Handler,            // DMA1_Channel1_IRQHandler,
-   (void*)&Default_Handler,            // DMA1_Channel2_IRQHandler,
+   (void*)&DMA1_Channel2_IRQHandler,
    (void*)&Default_Handler,            // DMA1_Channel3_IRQHandler,
    (void*)&Default_Handler,            // DMA1_Channel4_IRQHandler,
    (void*)&Default_Handler,            // DMA1_Channel5_IRQHandler,
    (void*)&Default_Handler,            // DMA1_Channel6_IRQHandler,
-   (void*)&DMA1_Channel7_IRQHandler,
+   (void*)&Default_Handler,            // DMA1_Channel7_IRQHandler,
    (void*)&Default_Handler,            // ADC1_IRQHandler,
    (void*)&Default_Handler,            // CAN1_TX_IRQHandler,
    (void*)&Default_Handler,            // CAN1_RX0_IRQHandler,
@@ -99,8 +99,8 @@ void* g_pfnVectors[] __attribute__ ((section (".isr_vector"))) =
    (void*)&Default_Handler,            // SPI1_IRQHandler,
    (void*)&Default_Handler,            // SPI2_IRQHandler,
    (void*)&Default_Handler,            // USART1_IRQHandler,
-   (void*)&USART2_IRQHandler,
-   (void*)&Default_Handler,            // USART3_IRQHandler,
+   (void*)&Default_Handler,            // USART2_IRQHandler,
+   (void*)&USART3_IRQHandler,
    (void*)&Default_Handler,            // EXTI15_10_IRQHandler,
    (void*)&Default_Handler,            // RTC_Alarm_IRQHandler,
    (void*)&Default_Handler,            // DFSDM3_IRQHandler,

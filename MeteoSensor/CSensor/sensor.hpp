@@ -28,12 +28,12 @@ private:
    static const unsigned char REG_ADDR_HTS221_TEMP_OUT      = (0x2A | 0x80);  // Autoincrement
    static const unsigned char REG_ADDR_HTS221_CALIB_DATA    = (0x30 | 0x80);  // Autoincrement
 
-   static const unsigned char REG_ADDR_LPS25HB_WHO_AM_I     = 0x0F;
-   static const unsigned char REG_VAL_LPS25HB_WHO_AM_I      = 0xBD;
-   static const unsigned char REG_ADDR_LPS25HB_CTRL1        = 0x20;
-   static const unsigned char REG_ADDR_LPS25HB_CTRL2        = 0x21;
-   static const unsigned char REG_ADDR_LPS25HB_STATUS       = 0x27;
-   static const unsigned char REG_ADDR_LPS25HB_PRESS_OUT_XL = (0x28 | 0x80);  // Autoincrement
+   static const unsigned char REG_ADDR_LPS22HB_WHO_AM_I     = 0x0F;
+   static const unsigned char REG_VAL_LPS22HB_WHO_AM_I      = 0xB1;
+   static const unsigned char REG_ADDR_LPS22HB_CTRL1        = 0x10;
+   static const unsigned char REG_ADDR_LPS22HB_CTRL2        = 0x11;
+   static const unsigned char REG_ADDR_LPS22HB_STATUS       = 0x27;
+   static const unsigned char REG_ADDR_LPS22HB_PRESS_OUT_XL = 0x28;
 
 
 #pragma pack(1)
@@ -74,10 +74,10 @@ private:
    void HTS221_ReadTemperature   (void);
    void HTS221_ReadHumidity      (void);
 
-   void LPS25HB_PowerUp          (void);
-   void LPS25HB_PowerDown        (void);
-   void LPS25HB_NewMeasurement   (void);
-   void LPS25HB_ReadPressure     (void);
+   void LPS22HB_PowerUp          (void);
+   void LPS22HB_PowerDown        (void);
+   void LPS22HB_NewMeasurement   (void);
+   void LPS22HB_ReadPressure     (void);
 };
 
 #endif /* SENSOR_HPP_ */

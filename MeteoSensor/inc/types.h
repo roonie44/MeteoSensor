@@ -2,6 +2,7 @@
 #define _TYPES_H_
 
 #define  ASCII(x)	                              (((x) < 10) ? ((x) + 0x30) : ((x) + 0x37))
+#define  HEX(x)                                 ((x) - 0x30)
 
 typedef union
 {

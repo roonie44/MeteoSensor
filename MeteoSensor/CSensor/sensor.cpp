@@ -5,7 +5,7 @@ void CSensorModule::Init(void)
    THTS221CalibData  HTS221CalibData;
 
    HTS221_PowerUp();
-   LPS25HB_PowerUp();
+   LPS22HB_PowerUp();
 
    I2C.Write(I2C_ADDRESS_HTS221, REG_ADDR_HTS221_CALIB_DATA);
    I2C.Read(I2C_ADDRESS_HTS221, &HTS221CalibData, sizeof(HTS221CalibData));
@@ -43,8 +43,8 @@ void CSensorModule::Handle(void)
 
    if(RequestDataType == PRESSURE)
    {
-      LPS25HB_NewMeasurement();
-      LPS25HB_ReadPressure();
+      LPS22HB_NewMeasurement();
+      LPS22HB_ReadPressure();
    }
 
    //HTS221_PowerDown();
@@ -136,7 +136,8 @@ void CSensorModule::HTS221_ReadTemperature(void)
    s32Temperature *= 100;
    s32Temperature /= 8;
 
-   BlueNRG.Callback(u32CallbackId, &s32Temperature);
+   if(u32CallbackId != 0)
+      BlueNRG.Callback(u32CallbackId, &s32Temperature);
 }
 
 void CSensorModule::HTS221_ReadHumidity(void)
@@ -159,72 +160,73 @@ void CSensorModule::HTS221_ReadHumidity(void)
    s32Humidity *= 100;
    s32Humidity /= 2;
 
-   BlueNRG.Callback(u32CallbackId, &s32Humidity);
+   if(u32CallbackId != 0)
+      BlueNRG.Callback(u32CallbackId, &s32Humidity);
 }
 
-void CSensorModule::LPS25HB_PowerUp(void)
+void CSensorModule::LPS22HB_PowerUp(void)
 {
    unsigned char     U8RawData[2];
 
-   Log.Str("SEN LPS25HB Power UP\r");
+   Log.Str("SEN LPS22HB Power UP\r");
 
-   U8RawData[0] = REG_ADDR_LPS25HB_CTRL1;
+   U8RawData[0] = REG_ADDR_LPS22HB_CTRL1;
    U8RawData[1] = 0x80;
-   I2C.Write(I2C_ADDRESS_LPS25HB, U8RawData, sizeof(U8RawData));
+   I2C.Write(I2C_ADDRESS_LPS22HB, U8RawData, sizeof(U8RawData));
 
-   I2C.Write(I2C_ADDRESS_LPS25HB, REG_ADDR_LPS25HB_WHO_AM_I);
-   I2C.Read(I2C_ADDRESS_LPS25HB, &U8RawData[0], 1);
+   I2C.Write(I2C_ADDRESS_LPS22HB, REG_ADDR_LPS22HB_WHO_AM_I);
+   I2C.Read(I2C_ADDRESS_LPS22HB, &U8RawData[0], 1);
 
-   Log.Str("SEN LPS25HB Status: ");
-   if(U8RawData[0] == REG_VAL_LPS25HB_WHO_AM_I)
+   Log.Str("SEN LPS22HB Status: ");
+   if(U8RawData[0] == REG_VAL_LPS22HB_WHO_AM_I)
       Log.Str("OK\r");
    else
       Log.Str("ERR\r");
 }
 
-void CSensorModule::LPS25HB_PowerDown(void)
+void CSensorModule::LPS22HB_PowerDown(void)
 {
    unsigned char     U8RawData[2];
 
-   Log.Str("SEN LPS25HB Power DOWN\r");
+   Log.Str("SEN LPS22HB Power DOWN\r");
 
-   U8RawData[0] = REG_ADDR_LPS25HB_CTRL1;
+   U8RawData[0] = REG_ADDR_LPS22HB_CTRL1;
    U8RawData[1] = 0x00;
-   I2C.Write(I2C_ADDRESS_LPS25HB, U8RawData, sizeof(U8RawData));
+   I2C.Write(I2C_ADDRESS_LPS22HB, U8RawData, sizeof(U8RawData));
 }
 
-void CSensorModule::LPS25HB_NewMeasurement(void)
+void CSensorModule::LPS22HB_NewMeasurement(void)
 {
    unsigned char U8RawData[3];
 
-   I2C.Write(I2C_ADDRESS_LPS25HB, REG_ADDR_LPS25HB_STATUS);
-   I2C.Read(I2C_ADDRESS_LPS25HB, &U8RawData[0], 1);
+   I2C.Write(I2C_ADDRESS_LPS22HB, REG_ADDR_LPS22HB_STATUS);
+   I2C.Read(I2C_ADDRESS_LPS22HB, &U8RawData[0], 1);
 
-   I2C.Write(I2C_ADDRESS_LPS25HB, REG_ADDR_LPS25HB_PRESS_OUT_XL);
-   I2C.Read(I2C_ADDRESS_LPS25HB, &U8RawData[0], sizeof(U8RawData));
+   I2C.Write(I2C_ADDRESS_LPS22HB, REG_ADDR_LPS22HB_PRESS_OUT_XL);
+   I2C.Read(I2C_ADDRESS_LPS22HB, &U8RawData[0], sizeof(U8RawData));
 
-   I2C.Write(I2C_ADDRESS_LPS25HB, REG_ADDR_LPS25HB_STATUS);
-   I2C.Read(I2C_ADDRESS_LPS25HB, &U8RawData[0], 1);
+   I2C.Write(I2C_ADDRESS_LPS22HB, REG_ADDR_LPS22HB_STATUS);
+   I2C.Read(I2C_ADDRESS_LPS22HB, &U8RawData[0], 1);
 
-   U8RawData[0] = REG_ADDR_LPS25HB_CTRL2;
-   U8RawData[1] = 0x01;
-   I2C.Write(I2C_ADDRESS_LPS25HB, U8RawData, 2);
+   U8RawData[0] = REG_ADDR_LPS22HB_CTRL2;
+   U8RawData[1] = 0x11;
+   I2C.Write(I2C_ADDRESS_LPS22HB, U8RawData, 2);
 
    do
    {
-      I2C.Write(I2C_ADDRESS_LPS25HB, REG_ADDR_LPS25HB_STATUS);
-      I2C.Read(I2C_ADDRESS_LPS25HB, &U8RawData[0], 1);
+      I2C.Write(I2C_ADDRESS_LPS22HB, REG_ADDR_LPS22HB_STATUS);
+      I2C.Read(I2C_ADDRESS_LPS22HB, &U8RawData[0], 1);
    }
    while((U8RawData[0] & 0x03) != 0x03);
 }
 
-void CSensorModule::LPS25HB_ReadPressure(void)
+void CSensorModule::LPS22HB_ReadPressure(void)
 {
    unsigned char  U8RawData[3];
    unsigned int   u32Pressure = 0;
 
-   I2C.Write(I2C_ADDRESS_LPS25HB, REG_ADDR_LPS25HB_PRESS_OUT_XL);
-   I2C.Read(I2C_ADDRESS_LPS25HB, &U8RawData[0], sizeof(U8RawData));
+   I2C.Write(I2C_ADDRESS_LPS22HB, REG_ADDR_LPS22HB_PRESS_OUT_XL);
+   I2C.Read(I2C_ADDRESS_LPS22HB, &U8RawData[0], sizeof(U8RawData));
 
    // Pressure in 1/4096 [hPa]
    u32Pressure = (unsigned int)U8RawData[0] | (unsigned int)U8RawData[1] << 8 | (unsigned int)U8RawData[2] << 16;
@@ -234,5 +236,6 @@ void CSensorModule::LPS25HB_ReadPressure(void)
    // Pressure in 0.1 [Pa] = 1/4096 [hPa] * 1000 / 4096
    u32Pressure = (u32Pressure * 250) / 1024;
 
-   BlueNRG.Callback(u32CallbackId, &u32Pressure);
+   if(u32CallbackId != 0)
+      BlueNRG.Callback(u32CallbackId, &u32Pressure);
 }

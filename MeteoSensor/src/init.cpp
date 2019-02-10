@@ -44,7 +44,7 @@ void Init_PeriphClock(void)
    LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOH);
    LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_SPI1);
 
-   LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_USART2);
+   LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_USART3);
    LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_DMA1);
    LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_I2C1);
 }
@@ -62,10 +62,10 @@ void Init_LogUSART(void)
 
    // Pins
    LL_GPIO_SetPinMode(PIN_LOG_USART_PORT, PIN_LOG_USART_TX_PIN, LL_GPIO_MODE_ALTERNATE);
-   LL_GPIO_SetAFPin_0_7(PIN_LOG_USART_PORT, PIN_LOG_USART_TX_PIN, PIN_LOG_USART_AF);
+   LL_GPIO_SetAFPin_8_15(PIN_LOG_USART_PORT, PIN_LOG_USART_TX_PIN, PIN_LOG_USART_AF);
 
    LL_GPIO_SetPinMode(PIN_LOG_USART_PORT, PIN_LOG_USART_RX_PIN, LL_GPIO_MODE_ALTERNATE);
-   LL_GPIO_SetAFPin_0_7(PIN_LOG_USART_PORT, PIN_LOG_USART_RX_PIN, PIN_LOG_USART_AF);
+   LL_GPIO_SetAFPin_8_15(PIN_LOG_USART_PORT, PIN_LOG_USART_RX_PIN, PIN_LOG_USART_AF);
 
    // USART
    USART_InitStruct.BaudRate              = 115200;
@@ -101,7 +101,7 @@ void Init_LogTxDMA(void)
    DMA_InitStruct.PeriphRequest           = DMA_REQUEST_LOG;
    DMA_InitStruct.Priority                = LL_DMA_PRIORITY_MEDIUM;
 
-   LL_DMA_Init(DMA1, DMA_CHANNEL_LOG_TX, &DMA_InitStruct);
+   LL_DMA_Init(DMA_LOG, DMA_CHANNEL_LOG_TX, &DMA_InitStruct);
 }
 
 void Init_LogRxDMA(void)
@@ -120,7 +120,7 @@ void Init_LogRxDMA(void)
    DMA_InitStruct.PeriphRequest           = DMA_REQUEST_LOG;
    DMA_InitStruct.Priority                = LL_DMA_PRIORITY_MEDIUM;
 
-   LL_DMA_Init(DMA1, DMA_CHANNEL_LOG_RX, &DMA_InitStruct);
+   LL_DMA_Init(DMA_LOG, DMA_CHANNEL_LOG_RX, &DMA_InitStruct);
 }
 
 void Init_BlueNRG_SPI(void)
@@ -192,13 +192,13 @@ void Init_I2C(void)
 void Init_Interrupts(void)
 {
    // Log TX Transfer Complete
-   LL_DMA_EnableIT_TC(DMA1, DMA_CHANNEL_LOG_TX);
-   NVIC_EnableIRQ(DMA1_Channel7_IRQn);
+   LL_DMA_EnableIT_TC(DMA_LOG, DMA_CHANNEL_LOG_TX);
+   NVIC_EnableIRQ(DMA1_Channel2_IRQn);
 
    // Log RX Line Idle
    LL_USART_ClearFlag_IDLE(USART_LOG);
    LL_USART_EnableIT_IDLE(USART_LOG);
-   NVIC_EnableIRQ(USART2_IRQn);
+   NVIC_EnableIRQ(USART3_IRQn);
 
    // BlueNRG IRQ
    LL_SYSCFG_SetEXTISource(LL_SYSCFG_EXTI_PORTA, LL_SYSCFG_EXTI_LINE0);
@@ -218,7 +218,7 @@ void Init_Hardware(void)
    Init_LogTxDMA();
    Init_LogRxDMA();
 
-   Init_BlueNRG_SPI();
+   //Init_BlueNRG_SPI();
    Init_I2C();
 
    Init_Interrupts();

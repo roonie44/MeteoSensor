@@ -183,7 +183,7 @@ void CLogModule::HandleRx(void)
 
    if(U8InputBuffer[0] == 'C' && U8InputBuffer[1] == 'M' && U8InputBuffer[2] == 'D')
    {
-      CommandExecute(1);
+      CommandExecute(HEX(U8InputBuffer[4]));
    }
 
 
