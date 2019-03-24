@@ -68,16 +68,17 @@ private:
    eDataType      RequestDataType;
    unsigned int   u32CallbackId;
 
-   void HTS221_PowerUp           (void);
-   void HTS221_PowerDown         (void);
-   void HTS221_NewMeasurement    (void);
-   void HTS221_ReadTemperature   (void);
-   void HTS221_ReadHumidity      (void);
+   void HTS221_PowerUp              (void);
+   void HTS221_PowerDown            (void);
+   void HTS221_CheckState           (void);
+   void HTS221_ReadCalibrationData  (void);
+   void HTS221_NewMeasurement       (void);
+   void HTS221_ReadTemperature      (void);
+   void HTS221_ReadHumidity         (void);
 
-   void LPS22HB_PowerUp          (void);
-   void LPS22HB_PowerDown        (void);
-   void LPS22HB_NewMeasurement   (void);
-   void LPS22HB_ReadPressure     (void);
+   void LPS22HB_CheckState          (void);
+   void LPS22HB_NewMeasurement      (void);
+   void LPS22HB_ReadPressure        (void);
 };
 
 #endif /* SENSOR_HPP_ */

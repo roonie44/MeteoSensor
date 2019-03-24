@@ -1,4 +1,5 @@
 #include "main.h"
+#include "init.h"
 
 void CPowerModule::Handle(void)
 {
@@ -6,7 +7,6 @@ void CPowerModule::Handle(void)
    {
       EnterStopMode();
    }
-
 }
 
 void CPowerModule::SleepDeny(void)
@@ -21,13 +21,15 @@ void CPowerModule::SleepAllow(void)
 
 void CPowerModule::EnterStopMode(void)
 {
-   //Log.Str("POW enter stop\r");
+   Log.Str("\r");
    Log.Wait();
 
    __disable_irq();
 
    if (bSleepDeny == false)
    {
+      Init_Stop();
+
       // Disable internal wakeup line
       PWR->CR3 &= ~PWR_CR3_EIWF;
 
@@ -48,9 +50,8 @@ void CPowerModule::EnterStopMode(void)
       /* Request Wait For Interrupt */
       __WFI();
 
-      //Log.Str("POW wake up\r");
+      Init_Wakeup();
    }
 
    __enable_irq();
-
 }

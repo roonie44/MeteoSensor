@@ -21,7 +21,7 @@ int main(void)
    Log.Str("\r");
 
    Sensor.Init();
-   //BlueNRG.Init();
+   BlueNRG.Init();
 
    while(1)
    {
@@ -31,7 +31,7 @@ int main(void)
       if(Sensor.HandleRequest)
          Sensor.Handle();
 
-      //Power.Handle();
+      Power.Handle();
    }
 }
 
