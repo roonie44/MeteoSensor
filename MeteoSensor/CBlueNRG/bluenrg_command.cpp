@@ -140,7 +140,7 @@ int CBlueNRGModule::CmdGapSetDiscoverable(void)
    Params.u8AdvertisingType   = 0;        // Connectable undirected advertising (ADV_IND)
    Params.u16IntervalMin      = 0x0800;   // 1.28s
    Params.u16IntervalMax      = 0x0800;   // 1.28s
-   Params.u8OwnAddressType    = 0;        // Public Device Address
+   Params.u8OwnAddressType    = 1;        // Public Device Address
    Params.u8FilterPolicy      = 0;        //  Allow scan request from any, allow connect request from any
    Params.u8LocalNameLen      = 0;
    Params.u8ServiceUUIDLen    = 0;

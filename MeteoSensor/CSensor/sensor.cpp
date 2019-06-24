@@ -59,6 +59,8 @@ void CSensorModule::HTS221_PowerDown(void)
 {
    unsigned char U8RawData[2];
 
+   return;
+
    Log.Str("SEN HTS221 Power DOWN\r");
 
    U8RawData[0] = REG_ADDR_HTS221_CTRL1;
@@ -107,6 +109,7 @@ void CSensorModule::HTS221_ReadCalibrationData(void)
 void CSensorModule::HTS221_NewMeasurement(void)
 {
    unsigned char U8RawData[2];
+   unsigned int  u32Timeout = 100;
 
    Log.Str("SEN HTS221 Measurement request\r");
 
@@ -135,13 +138,16 @@ void CSensorModule::HTS221_NewMeasurement(void)
    U8RawData[1] = 0x01;
    I2C.Write(I2C_ADDRESS_HTS221, U8RawData, 2);
 
+   I2C.Write(I2C_ADDRESS_HTS221, REG_ADDR_HTS221_CTRL2);
+   I2C.Read(I2C_ADDRESS_HTS221, &U8RawData[0], 1);
+
    do
    {
       // Read status
       I2C.Write(I2C_ADDRESS_HTS221, REG_ADDR_HTS221_STATUS);
       I2C.Read(I2C_ADDRESS_HTS221, &U8RawData[0], 1);
    }
-   while((U8RawData[0] & 0x03) != 0x03);
+   while((U8RawData[0] & 0x03) != 0x03 && u32Timeout-- != 0);
 }
 
 void CSensorModule::HTS221_ReadTemperature(void)

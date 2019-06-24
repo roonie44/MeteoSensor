@@ -87,6 +87,7 @@ void CBlueNRGModule::Handle(void)
       Log.Str("BLE char add [PRESSURE]\r");
       CmdGattAddChar(Service.EnvironmentalSensing.u16Handle, UUID_TYPE_16, CHARACTERISTIC_UUID_PRESSURE, 4, CHAR_PROP_READ, 0, 0x04, 16, 0, &Service.EnvironmentalSensing.Characteristic.Pressure.u16Handle, &Service.EnvironmentalSensing.Characteristic.Pressure.Value.u16Handle);
       State = STATE_SET_DISCOVERABLE;
+      //State = STATE_ADVERTISING;
       break;
 
    case STATE_SET_DISCOVERABLE:
