@@ -5,11 +5,12 @@ CLogModule        Log;
 CPowerModule      Power;
 CSpiModule        Spi;
 CBlueNRGModule    BlueNRG;
-CI2CModule        I2C;
+CI2CModule        I2C(I2C2);
 CSensorModule     Sensor;
 
 int main(void)
 {
+   I2C.pI2C = I2C2;
    Init_Hardware();
 
    Log.Init();
