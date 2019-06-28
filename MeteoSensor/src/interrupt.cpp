@@ -1,9 +1,10 @@
 #include "main.h"
 
 extern void *_sidata, *_sdata, *_edata, *_sbss, *_ebss, *_estack;
-//void __libc_init_array(void);
+extern "C" {
+void __libc_init_array(void);
 void Reset_Handler(void);
-
+}
 void SysTick_Handler(void)
 {
 
@@ -146,6 +147,7 @@ void* g_pfnVectors[] __attribute__ ((section (".isr_vector"))) =
 };
 
 
+extern "C" {
 //void __attribute__((naked, noreturn)) Reset_Handler()
 void Reset_Handler(void)
 {
@@ -164,7 +166,8 @@ void Reset_Handler(void)
    for (pDest = &_sbss; pDest != &_ebss; pDest++)
       *pDest = 0;
 
-   //__libc_init_array();
+   __libc_init_array();
 
    main();
+}
 }

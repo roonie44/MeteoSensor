@@ -1,11 +1,17 @@
 #include "main.h"
 
-void CI2CModule::Write(unsigned int u32SlaveAddress, unsigned char *pData, int s32Length)
+Error CI2C::SetSlaveAddress(unsigned char u8Address)
 {
-   Log.StrHex("I2C [", u32SlaveAddress, 1);
+   SlaveAddress = u8Address;
+   return Error::OK;
+}
+
+void CI2C::Write(unsigned char *pData, int s32Length)
+{
+   Log.StrHex("I2C [", SlaveAddress, 1);
    Log.Str("] write ");
 
-   MODIFY_REG  (pI2C->CR2, I2C_CR2_SADD, u32SlaveAddress << 1);
+   MODIFY_REG  (pI2C->CR2, I2C_CR2_SADD, SlaveAddress << 1);
    MODIFY_REG  (pI2C->CR2, I2C_CR2_NBYTES, s32Length << I2C_CR2_NBYTES_Pos);
    CLEAR_BIT   (pI2C->CR2, I2C_CR2_RD_WRN);  // 0 = write
    //SET_BIT     (I2C_SENSOR->CR2, I2C_CR2_AUTOEND);
@@ -33,17 +39,17 @@ void CI2CModule::Write(unsigned int u32SlaveAddress, unsigned char *pData, int s
    Log.Str("\r");
 }
 
-void CI2CModule::Write(unsigned int u32SlaveAddress, unsigned char u8Data)
+void CI2C::Write(unsigned char u8Data)
 {
-   Write(u32SlaveAddress, &u8Data, 1);
+   Write(&u8Data, 1);
 }
 
-void CI2CModule::Read(unsigned int u32SlaveAddress, void *pData, int s32Length)
+void CI2C::Read(void *pData, int s32Length)
 {
-   Log.StrHex("I2C [", u32SlaveAddress, 1);
+   Log.StrHex("I2C [", SlaveAddress, 1);
    Log.Str("] read ");
 
-   MODIFY_REG  (pI2C->CR2, I2C_CR2_SADD, u32SlaveAddress << 1);
+   MODIFY_REG  (pI2C->CR2, I2C_CR2_SADD, SlaveAddress << 1);
    MODIFY_REG  (pI2C->CR2, I2C_CR2_NBYTES, s32Length << I2C_CR2_NBYTES_Pos);
    SET_BIT     (pI2C->CR2, I2C_CR2_RD_WRN);  // 1 = read
    //SET_BIT     (I2C_SENSOR->CR2, I2C_CR2_AUTOEND);
@@ -55,7 +61,7 @@ void CI2CModule::Read(unsigned int u32SlaveAddress, void *pData, int s32Length)
       {
          *(unsigned char*)pData = pI2C->RXDR;
          Log.Hex(*(unsigned char*)pData, 1);
-         pData++;
+         pData = (unsigned char*)pData + 1;
          s32Length--;
       }
    }

@@ -58,7 +58,7 @@ void CBlueNRGModule::Handle(void)
 
    case STATE_CHAR_UPDATE_APPEARANCE:
       //Log.StrHexR("BLE char update [APPEARANCE]: ", APPEARANCE, sizeof(APPEARANCE));
-      unsigned short temp;
+      //unsigned short temp;
       //temp = APPEARANCE;
       CmdGattUpdateCharValue(u16ServiceHandle, u16AppearanceCharHandle, 0, sizeof(APPEARANCE), &APPEARANCE);
       State = STATE_SERVICE_ADD_ENVIRONMENTAL_SENSOR;

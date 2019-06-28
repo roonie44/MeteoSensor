@@ -25,12 +25,12 @@
 #include "../CSensor/i2c.hpp"
 #include "../CSensor/sensor.hpp"
 
-
 extern CLogModule       Log;
 extern CPowerModule     Power;
 extern CSpiModule       Spi;
 extern CBlueNRGModule   BlueNRG;
-extern CI2CModule       I2C;
+extern CI2C             I2C;
+extern CBME280          BME280;
 extern CSensorModule    Sensor;
 
 int   main           (void);

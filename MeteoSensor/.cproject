@@ -78,7 +78,6 @@
 								<option id="com.atollic.truestudio.gpp.directories.select.306664464" name="Include path" superClass="com.atollic.truestudio.gpp.directories.select" useByScannerDiscovery="false" valueType="includePath">
 									<listOptionValue builtIn="false" value="../Drivers/STM32L4xx_LL_Driver/inc"/>
 									<listOptionValue builtIn="false" value="../CLog"/>
-									<listOptionValue builtIn="false" value="../src"/>
 									<listOptionValue builtIn="false" value="../inc"/>
 									<listOptionValue builtIn="false" value="../Drivers/CMSIS/Include"/>
 									<listOptionValue builtIn="false" value="../Drivers/CMSIS/Device/ST/STM32L4xx/Include"/>
@@ -116,7 +115,7 @@
 								<option id="com.atollic.truestudio.secoutput.general.mapfile.1179364526" name="Create map file" superClass="com.atollic.truestudio.secoutput.general.mapfile" useByScannerDiscovery="false" value="true" valueType="boolean"/>
 								<option id="com.atollic.truestudio.secoutput.general.listfile.1498534404" name="Generate list file" superClass="com.atollic.truestudio.secoutput.general.listfile" useByScannerDiscovery="false" value="false" valueType="boolean"/>
 								<option id="com.atollic.truestudio.secoutput.general.version.1557090792" name="Show size information" superClass="com.atollic.truestudio.secoutput.general.version" useByScannerDiscovery="false" value="true" valueType="boolean"/>
-								<option id="com.atollic.truestudio.secoutput.general.convert.1306641486" superClass="com.atollic.truestudio.secoutput.general.convert" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+								<option id="com.atollic.truestudio.secoutput.general.convert.1306641486" name="Convert build output" superClass="com.atollic.truestudio.secoutput.general.convert" useByScannerDiscovery="false" value="true" valueType="boolean"/>
 							</tool>
 						</toolChain>
 					</folderInfo>

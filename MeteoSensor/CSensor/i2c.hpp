@@ -1,17 +1,19 @@
 #ifndef I2C_CPP_
 #define I2C_CPP_
+#include "types.h"
 
-class CI2CModule
+class CI2C
 {
-public:
-   I2C_TypeDef *pI2C;
+   I2C_TypeDef    *pI2C;
+   unsigned char  SlaveAddress;
 
 public:
-   CI2CModule  (I2C_TypeDef *pI2C){ this->pI2C = pI2C; }
+         CI2C              (I2C_TypeDef *pI2C){ this->pI2C = pI2C; }
 
-   void Write  (unsigned int u32SlaveAddress, unsigned char *pData, int s32Length);
-   void Write  (unsigned int u32SlaveAddress, unsigned char u8Data);
-   void Read   (unsigned int u32SlaveAddress, void *pData, int s32Length);
+   Error SetSlaveAddress   (unsigned char u8Address);
+   void  Write             (unsigned char *pData, int s32Length);
+   void  Write             (unsigned char u8Data);
+   void  Read              (void *pData, int s32Length);
 };
 
 
