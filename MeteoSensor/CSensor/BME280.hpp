@@ -39,10 +39,10 @@ private:
    static const unsigned char REG_ADDR_HUM               = 0xFD;
 
    static const unsigned char REG_MASK_CTRL_MEAS_MODE    = 0x01;  // forced
-   static const unsigned char REG_MASK_CTRL_MEAS_OSRS_P  = 0x20;  // oversampling x1
-   static const unsigned char REG_MASK_CTRL_MEAS_OSRS_T  = 0x04;  // oversampling x1
+   static const unsigned char REG_MASK_CTRL_MEAS_OSRS_P  = 0x04;  // oversampling x1
+   static const unsigned char REG_MASK_CTRL_MEAS_OSRS_T  = 0x20;  // oversampling x1
    static const unsigned char REG_MASK_CTRL_HUM_OSRS_H   = 0x01;  // oversampling x1
-   static const unsigned char REG_MASK_STATUS_MEASURING  = 0x80;  // 1 = conversion running
+   static const unsigned char REG_MASK_STATUS_MEASURING  = 0x08;  // 1 = conversion running
 
    CI2C              *pI2C;
 
