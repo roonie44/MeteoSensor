@@ -75,6 +75,8 @@ private:
    signed int     ReadTemperature         ();
    unsigned int   ReadHumidity            ();
    unsigned int   ReadPressure            ();
+   void           PowerOn                 ();
+   void           PowerOff                ();
    signed int     CompensateTemperature   (signed int s32TemperatureRaw);
    unsigned int   CompensateHumidity      (signed int s32HumidityRaw);
    unsigned int   CompensatePressure      (signed int s32PressureRaw);

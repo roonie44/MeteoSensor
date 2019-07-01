@@ -2,15 +2,19 @@
 
 void CBME280::Init()
 {
+   PowerOn();
    ReadCalibrationData();
+   PowerOff();
 }
 // Returns 0.01 DegC
 signed int CBME280::GetTemperature()
 {
    signed int s32Temperature;
 
+   PowerOn();
    NewMeasurement(true, false, false);
    s32Temperature = ReadTemperature();
+   PowerOff();
 
    Log.StrDec("BME Temp ", s32Temperature / 100);
    Log.StrDecR(".", s32Temperature % 100);
@@ -21,8 +25,10 @@ unsigned int CBME280::GetHumidity()
 {
    unsigned int u32Humidity;
 
+   PowerOn();
    NewMeasurement(true, true, false);
    u32Humidity = ReadHumidity();
+   PowerOff();
 
    Log.StrDec("BME Humidity ", u32Humidity / 1024);
    Log.StrDecR(".", (u32Humidity % 1024) * 1000 / 1024);
@@ -34,13 +40,31 @@ unsigned int CBME280::GetPressure()
 {
    unsigned int u32Pressure;
 
+   PowerOn();
    NewMeasurement(true, false, true);
    u32Pressure = ReadPressure();
+   PowerOff();
 
    Log.StrDec("BME Pressure ", u32Pressure / 256);
    Log.StrDecR(".", (u32Pressure % 256) * 1000 / 256);
    return u32Pressure * 10 / 256;
 }
+
+void CBME280::PowerOn()
+{
+   Log.Str("BME Power ON\r");
+   LL_GPIO_ResetOutputPin(PIN_SENSOR_I2C2_PWR_PORT, PIN_SENSOR_I2C2_PWR_PIN);
+   LL_GPIO_SetPinMode(PIN_SENSOR_I2C2_SCL_PORT, PIN_SENSOR_I2C2_SCL_PIN, LL_GPIO_MODE_ALTERNATE);
+   LL_GPIO_SetPinMode(PIN_SENSOR_I2C2_SDA_PORT, PIN_SENSOR_I2C2_SDA_PIN, LL_GPIO_MODE_ALTERNATE);
+}
+void CBME280::PowerOff()
+{
+   Log.Str("BME Power OFF\r");
+   LL_GPIO_SetPinMode(PIN_SENSOR_I2C2_SDA_PORT, PIN_SENSOR_I2C2_SDA_PIN, LL_GPIO_MODE_ANALOG);
+   LL_GPIO_SetPinMode(PIN_SENSOR_I2C2_SCL_PORT, PIN_SENSOR_I2C2_SCL_PIN, LL_GPIO_MODE_ANALOG);
+   LL_GPIO_SetOutputPin(PIN_SENSOR_I2C2_PWR_PORT, PIN_SENSOR_I2C2_PWR_PIN);
+}
+
 void CBME280::ReadCalibrationData()
 {
    Log.Str("BME Calibration data read\r");
