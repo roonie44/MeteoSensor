@@ -136,16 +136,29 @@ int CBlueNRGModule::CmdGapInit(void)
 int CBlueNRGModule::CmdGapSetDiscoverable(void)
 {
    TCmdParamsSetDicoverable Params;
+            char U8LocalName[strlen(DEVICE_NAME) + 1];
+   unsigned char U8Params[sizeof(Params) + sizeof(U8LocalName)];
+
+   if (strlen(DEVICE_NAME) > 0)
+   {
+      U8LocalName[0]          = 0x09;     // AD_TYPE_COMPLETE_LOCAL_NAME
+      strcpy(&U8LocalName[1], DEVICE_NAME);
+   }
+   else
+      U8LocalName[0]          = 0;
 
    Params.u8AdvertisingType   = 0;        // Connectable undirected advertising (ADV_IND)
    Params.u16IntervalMin      = 0x0800;   // 1.28s
    Params.u16IntervalMax      = 0x0800;   // 1.28s
    Params.u8OwnAddressType    = 1;        // Public Device Address
    Params.u8FilterPolicy      = 0;        //  Allow scan request from any, allow connect request from any
-   Params.u8LocalNameLen      = 0;
+   Params.u8LocalNameLen      = strlen(U8LocalName);
    Params.u8ServiceUUIDLen    = 0;
    Params.u16ConnIntervalMin  = 0xFFFF;   // No specific minimum
    Params.u16ConnIntervalMax  = 0xFFFF;   // No specific maximum
 
-   return SendCommand(CMD_OPCODE_GAP_SET_DISCOVERABLE, &Params, sizeof(Params));
+   memcpy(&U8Params[0], &Params, offsetof(TCmdParamsSetDicoverable, u8ServiceUUIDLen));
+   memcpy(&U8Params[offsetof(TCmdParamsSetDicoverable, u8ServiceUUIDLen)], U8LocalName, sizeof(U8LocalName));
+   memcpy(&U8Params[offsetof(TCmdParamsSetDicoverable, u8ServiceUUIDLen) + sizeof(U8LocalName)], &Params.u8ServiceUUIDLen, sizeof(TCmdParamsSetDicoverable) - offsetof(TCmdParamsSetDicoverable, u8ServiceUUIDLen));
+   return SendCommand(CMD_OPCODE_GAP_SET_DISCOVERABLE, U8Params, sizeof(U8Params));
 }

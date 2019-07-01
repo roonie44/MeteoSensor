@@ -6,9 +6,6 @@
 
 class CBlueNRGModule
 {
-   static const unsigned char PUBLIC_ADDRESS[6];
-   static const          char DEVICE_NAME[];
-
    static const unsigned char SPI_WRITE_HEADER[5];
    static const unsigned char SPI_READ_HEADER[5];
 
@@ -21,7 +18,6 @@ class CBlueNRGModule
 
    enum eState
    {
-      STATE_SET_PUBLIC_ADDRESS,
       STATE_GATT_INIT,
       STATE_GAP_INIT,
       STATE_CHAR_UPDATE_DEVICE_NAME,

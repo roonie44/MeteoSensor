@@ -1,8 +1,5 @@
 #include "main.h"
 
-const unsigned char CBlueNRGModule::PUBLIC_ADDRESS[6]                      = { 0xA0, 0xB0, 0xC0, 0xD0, 0xE0, 0xF0, };
-const          char CBlueNRGModule::DEVICE_NAME[]                          = "MeteoSensor";
-
 const unsigned char CBlueNRGModule::SPI_WRITE_HEADER[5]                    = { 0x0A, 0x00, 0x00, 0x00, 0x00, };
 const unsigned char CBlueNRGModule::SPI_READ_HEADER[5]                     = { 0x0B, 0x00, 0x00, 0x00, 0x00, };
 
@@ -30,12 +27,6 @@ void CBlueNRGModule::Handle(void)
 
    switch(State)
    {
-   case STATE_SET_PUBLIC_ADDRESS:
-      Log.StrBlobR("BLE public address set: ", (unsigned char*)PUBLIC_ADDRESS, sizeof(PUBLIC_ADDRESS));
-      CmdWriteConfigData(0x00, sizeof(PUBLIC_ADDRESS), (void*)PUBLIC_ADDRESS);
-      State = STATE_GATT_INIT;
-      break;
-
    case STATE_GATT_INIT:
       Log.Str("BLE GATT Init\r");
       CmdGattInit();
@@ -57,9 +48,7 @@ void CBlueNRGModule::Handle(void)
       break;
 
    case STATE_CHAR_UPDATE_APPEARANCE:
-      //Log.StrHexR("BLE char update [APPEARANCE]: ", APPEARANCE, sizeof(APPEARANCE));
-      //unsigned short temp;
-      //temp = APPEARANCE;
+      Log.StrHexR("BLE char update [APPEARANCE]: ", APPEARANCE, sizeof(APPEARANCE));
       CmdGattUpdateCharValue(u16ServiceHandle, u16AppearanceCharHandle, 0, sizeof(APPEARANCE), &APPEARANCE);
       State = STATE_SERVICE_ADD_ENVIRONMENTAL_SENSOR;
       //State = STATE_SET_DISCOVERABLE;

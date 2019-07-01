@@ -25,6 +25,8 @@
 #include "../CSensor/i2c.hpp"
 #include "../CSensor/sensor.hpp"
 
+extern const char       DEVICE_NAME[32];
+
 extern CLogModule       Log;
 extern CPowerModule     Power;
 extern CSpiModule       Spi;

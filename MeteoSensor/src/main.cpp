@@ -1,6 +1,8 @@
 #include "main.h"
 #include "init.h"
 
+const          char DEVICE_NAME[32] = "MeteoNode";
+
 CLogModule        Log;
 CPowerModule      Power;
 CSpiModule        Spi;

@@ -116,7 +116,7 @@ struct TCmdParamsSetDicoverable
    unsigned char  u8OwnAddressType;
    unsigned char  u8FilterPolicy;
    unsigned char  u8LocalNameLen;
-   unsigned char  U8LocalName[0];
+            char  U8LocalName[0];
    unsigned char  u8ServiceUUIDLen;
    unsigned char  U8ServiceUUIDList[0];
    unsigned short u16ConnIntervalMin;
