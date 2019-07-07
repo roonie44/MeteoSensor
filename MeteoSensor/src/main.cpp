@@ -16,13 +16,14 @@ int main(void)
    Init_Hardware();
 
    Log.Init();
-   Log.Str("\r\r\rApplication: MeteoSensor\r");
+   Log.Str("\r\r\rApplication: MeteoNode\r");
    Log.Str("Builddate: ");
    Log.Str(__DATE__);
    Log.Str(", ");
    Log.Str(__TIME__);
    Log.Str("\r");
 
+   CClock::Init();
    Sensor.Init();
    BlueNRG.Init();
 

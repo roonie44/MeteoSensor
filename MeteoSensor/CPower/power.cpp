@@ -24,6 +24,8 @@ void CPowerModule::EnterStopMode(void)
    Log.Str("\r");
    Log.Wait();
 
+   CClock::Deinit();
+
    __disable_irq();
 
    if (bSleepDeny == false)
@@ -50,8 +52,12 @@ void CPowerModule::EnterStopMode(void)
       /* Request Wait For Interrupt */
       __WFI();
 
+      LL_LPM_EnableSleep();
+
       Init_Wakeup();
    }
 
    __enable_irq();
+
+   CClock::Init();
 }

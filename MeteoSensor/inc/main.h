@@ -20,6 +20,7 @@
 
 #include "../CLog/log.hpp"
 #include "../CPower/power.hpp"
+#include "../CClock/clock.hpp"
 #include "../CBlueNRG/spi.hpp"
 #include "../CBlueNRG/bluenrg.hpp"
 #include "../CSensor/i2c.hpp"

@@ -5,9 +5,10 @@ extern "C" {
 void __libc_init_array(void);
 void Reset_Handler(void);
 }
+
 void SysTick_Handler(void)
 {
-
+   CClock::Tick();
 }
 
 void DMA1_Channel2_IRQHandler(void)
