@@ -7,11 +7,13 @@ public:
                   CBME280                 (CI2C *pI2C) { this->pI2C = pI2C; }
 
    void           Init                    ();
-   signed int     GetTemperature          ();
-   unsigned int   GetHumidity             ();
-   unsigned int   GetPressure             ();
+   Status         GetTemperature          (signed int& s32Temperature);
+   Status         GetHumidity             (unsigned int& u32Humidity);
+   Status         GetPressure             (unsigned int& u32Pressure);
 
 private:
+   static const unsigned int  POWER_ON_TIMEOUT           = 10; // ms
+
    static const unsigned char REG_ADDR_CALIB_T1          = 0x88;
    static const unsigned char REG_ADDR_CALIB_T2          = 0x8A;
    static const unsigned char REG_ADDR_CALIB_T3          = 0x8C;
@@ -75,7 +77,7 @@ private:
    signed int     ReadTemperature         ();
    unsigned int   ReadHumidity            ();
    unsigned int   ReadPressure            ();
-   void           PowerOn                 ();
+   Status         PowerOn                 ();
    void           PowerOff                ();
    signed int     CompensateTemperature   (signed int s32TemperatureRaw);
    unsigned int   CompensateHumidity      (signed int s32HumidityRaw);

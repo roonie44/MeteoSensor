@@ -8,12 +8,12 @@ class CI2C
    unsigned char  SlaveAddress;
 
 public:
-         CI2C              (I2C_TypeDef *pI2C){ this->pI2C = pI2C; }
+            CI2C              (I2C_TypeDef *pI2C){ this->pI2C = pI2C; }
 
-   Error SetSlaveAddress   (unsigned char u8Address);
-   void  Write             (unsigned char *pData, int s32Length);
-   void  Write             (unsigned char u8Data);
-   void  Read              (void *pData, int s32Length);
+   Status   SetSlaveAddress   (unsigned char u8Address);
+   Status   Write             (unsigned char *pData, int s32Length);
+   Status   Write             (unsigned char u8Data);
+   Status   Read              (void *pData, int s32Length);
 };
 
 

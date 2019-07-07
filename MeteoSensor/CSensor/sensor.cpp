@@ -13,22 +13,19 @@ void CSensorModule::Handle(void)
    {
    case TEMPERATURE:
       signed int s32Temperature;
-      s32Temperature = BME280.GetTemperature();
-      if(u32CallbackId != 0)
+      if (BME280.GetTemperature(s32Temperature) == Status::OK && u32CallbackId != 0)
          BlueNRG.Callback(u32CallbackId, &s32Temperature);
       break;
 
    case HUMIDITY:
       unsigned int u32Humidity;
-      u32Humidity = BME280.GetHumidity();
-      if(u32CallbackId != 0)
+      if(BME280.GetHumidity(u32Humidity) == Status::OK && u32CallbackId != 0)
          BlueNRG.Callback(u32CallbackId, &u32Humidity);
       break;
 
    case PRESSURE:
       unsigned int u32Pressure;
-      u32Pressure = BME280.GetPressure();
-      if(u32CallbackId != 0)
+      if(BME280.GetPressure(u32Pressure) == Status::OK && u32CallbackId != 0)
          BlueNRG.Callback(u32CallbackId, &u32Pressure);
       break;
 

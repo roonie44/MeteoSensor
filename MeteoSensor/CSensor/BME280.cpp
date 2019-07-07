@@ -2,64 +2,85 @@
 
 void CBME280::Init()
 {
-   PowerOn();
-   ReadCalibrationData();
-   PowerOff();
+   if (PowerOn() == Status::OK)
+   {
+      ReadCalibrationData();
+      PowerOff();
+   }
 }
 // Returns 0.01 DegC
-signed int CBME280::GetTemperature()
+Status CBME280::GetTemperature(signed int& s32Temperature)
 {
-   signed int s32Temperature;
+   Status PowerOnStatus = PowerOn();
+   if (PowerOnStatus != Status::OK)
+      return PowerOnStatus;
 
-   PowerOn();
    NewMeasurement(true, false, false);
    s32Temperature = ReadTemperature();
    PowerOff();
 
    Log.StrDec("BME Temp ", s32Temperature / 100);
    Log.StrDecR(".", s32Temperature % 100);
-   return s32Temperature;
+   return Status::OK;
 }
 // Returns 0.01 %
-unsigned int CBME280::GetHumidity()
+Status CBME280::GetHumidity(unsigned int& u32Humidity)
 {
-   unsigned int u32Humidity;
+   Status PowerOnStatus = PowerOn();
+   if (PowerOnStatus != Status::OK)
+      return PowerOnStatus;
 
-   PowerOn();
    NewMeasurement(true, true, false);
-   u32Humidity = ReadHumidity();
+   u32Humidity = ReadHumidity() * 100 / 1024;
    PowerOff();
 
-   Log.StrDec("BME Humidity ", u32Humidity / 1024);
-   Log.StrDecR(".", (u32Humidity % 1024) * 1000 / 1024);
-
-   return u32Humidity * 100 / 1024;
+   Log.StrDec("BME Humidity ", u32Humidity / 100);
+   Log.StrDecR(".", u32Humidity % 100);
+   return Status::OK;
 }
 // Returns
-unsigned int CBME280::GetPressure()
+Status CBME280::GetPressure(unsigned int& u32Pressure)
 {
-   unsigned int u32Pressure;
+   Status PowerOnStatus = PowerOn();
+   if (PowerOnStatus != Status::OK)
+      return PowerOnStatus;
 
-   PowerOn();
    NewMeasurement(true, false, true);
-   u32Pressure = ReadPressure();
+   u32Pressure = ReadPressure() * 10 / 256;
    PowerOff();
 
-   Log.StrDec("BME Pressure ", u32Pressure / 256);
-   Log.StrDecR(".", (u32Pressure % 256) * 1000 / 256);
-   return u32Pressure * 10 / 256;
+   Log.StrDec("BME Pressure ", u32Pressure / 1000);
+   Log.StrDecR(".", u32Pressure % 1000);
+   return Status::OK;
 }
 
-void CBME280::PowerOn()
+Status CBME280::PowerOn()
 {
-   Log.Str("BME Power ON\r");
+   CClock   Clock;
+   Log.Str("BME Power ON ");
    LL_GPIO_ResetOutputPin(PIN_SENSOR_I2C2_PWR_PORT, PIN_SENSOR_I2C2_PWR_PIN);
    LL_GPIO_SetPinMode(PIN_SENSOR_I2C2_SCL_PORT, PIN_SENSOR_I2C2_SCL_PIN, LL_GPIO_MODE_ALTERNATE);
    LL_GPIO_SetPinMode(PIN_SENSOR_I2C2_SDA_PORT, PIN_SENSOR_I2C2_SDA_PIN, LL_GPIO_MODE_ALTERNATE);
+
+   while (LL_GPIO_IsInputPinSet(PIN_SENSOR_I2C2_SCL_PORT, PIN_SENSOR_I2C2_SCL_PIN) == 0 ||
+          LL_GPIO_IsInputPinSet(PIN_SENSOR_I2C2_SDA_PORT, PIN_SENSOR_I2C2_SDA_PIN) == 0)
+   {
+      if (Clock.IsElapsed(POWER_ON_TIMEOUT))
+      {
+         Log.Str(" err\r");
+         PowerOff();
+         return Status::TIMEOUT;
+      }
+   }
+
+   LL_I2C_Enable(I2C2);
+   Log.Str("\r");
+   return Status::OK;
 }
 void CBME280::PowerOff()
 {
    Log.Str("BME Power OFF\r");
+   LL_I2C_Disable(I2C2);
    LL_GPIO_SetPinMode(PIN_SENSOR_I2C2_SDA_PORT, PIN_SENSOR_I2C2_SDA_PIN, LL_GPIO_MODE_ANALOG);
    LL_GPIO_SetPinMode(PIN_SENSOR_I2C2_SCL_PORT, PIN_SENSOR_I2C2_SCL_PIN, LL_GPIO_MODE_ANALOG);
    LL_GPIO_SetOutputPin(PIN_SENSOR_I2C2_PWR_PORT, PIN_SENSOR_I2C2_PWR_PIN);

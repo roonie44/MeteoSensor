@@ -4,11 +4,12 @@
 #define  ASCII(x)	                              (((x) < 10) ? ((x) + 0x30) : ((x) + 0x37))
 #define  HEX(x)                                 ((x) - 0x30)
 
-enum Error
+enum Status
 {
    OK       = 0,
    BUSY     = 1,
    TIMEOUT  = 2,
+   FAILURE  = 3,
 };
 
 typedef union
