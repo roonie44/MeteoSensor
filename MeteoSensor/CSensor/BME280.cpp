@@ -58,12 +58,12 @@ Status CBME280::PowerOn()
 {
    CClock   Clock;
    Log.Str("BME Power ON ");
-   LL_GPIO_ResetOutputPin(PIN_SENSOR_I2C2_PWR_PORT, PIN_SENSOR_I2C2_PWR_PIN);
-   LL_GPIO_SetPinMode(PIN_SENSOR_I2C2_SCL_PORT, PIN_SENSOR_I2C2_SCL_PIN, LL_GPIO_MODE_ALTERNATE);
-   LL_GPIO_SetPinMode(PIN_SENSOR_I2C2_SDA_PORT, PIN_SENSOR_I2C2_SDA_PIN, LL_GPIO_MODE_ALTERNATE);
+   LL_GPIO_ResetOutputPin(PIN_SENSOR_I2C_PWR_PORT, PIN_SENSOR_I2C_PWR_PIN);
+   LL_GPIO_SetPinMode(PIN_SENSOR_I2C_SCL_PORT, PIN_SENSOR_I2C_SCL_PIN, LL_GPIO_MODE_ALTERNATE);
+   LL_GPIO_SetPinMode(PIN_SENSOR_I2C_SDA_PORT, PIN_SENSOR_I2C_SDA_PIN, LL_GPIO_MODE_ALTERNATE);
 
-   while (LL_GPIO_IsInputPinSet(PIN_SENSOR_I2C2_SCL_PORT, PIN_SENSOR_I2C2_SCL_PIN) == 0 ||
-          LL_GPIO_IsInputPinSet(PIN_SENSOR_I2C2_SDA_PORT, PIN_SENSOR_I2C2_SDA_PIN) == 0)
+   while (LL_GPIO_IsInputPinSet(PIN_SENSOR_I2C_SCL_PORT, PIN_SENSOR_I2C_SCL_PIN) == 0 ||
+          LL_GPIO_IsInputPinSet(PIN_SENSOR_I2C_SDA_PORT, PIN_SENSOR_I2C_SDA_PIN) == 0)
    {
       if (Clock.IsElapsed(POWER_ON_TIMEOUT))
       {
@@ -73,7 +73,7 @@ Status CBME280::PowerOn()
       }
    }
    Log.Str("\r");
-   LL_I2C_Enable(I2C2);
+   pI2C->Enable();
 
    while (ReadChipId() != REG_VAL_CHIP_ID)
    {
@@ -89,17 +89,17 @@ Status CBME280::PowerOn()
 void CBME280::PowerOff()
 {
    Log.Str("BME Power OFF\r");
-   LL_I2C_Disable(I2C2);
-   LL_GPIO_SetPinMode(PIN_SENSOR_I2C2_SDA_PORT, PIN_SENSOR_I2C2_SDA_PIN, LL_GPIO_MODE_ANALOG);
-   LL_GPIO_SetPinMode(PIN_SENSOR_I2C2_SCL_PORT, PIN_SENSOR_I2C2_SCL_PIN, LL_GPIO_MODE_ANALOG);
-   LL_GPIO_SetOutputPin(PIN_SENSOR_I2C2_PWR_PORT, PIN_SENSOR_I2C2_PWR_PIN);
+   pI2C->Disable();
+   LL_GPIO_SetPinMode(PIN_SENSOR_I2C_SDA_PORT, PIN_SENSOR_I2C_SDA_PIN, LL_GPIO_MODE_ANALOG);
+   LL_GPIO_SetPinMode(PIN_SENSOR_I2C_SCL_PORT, PIN_SENSOR_I2C_SCL_PIN, LL_GPIO_MODE_ANALOG);
+   LL_GPIO_SetOutputPin(PIN_SENSOR_I2C_PWR_PORT, PIN_SENSOR_I2C_PWR_PIN);
 }
 
 void CBME280::ReadCalibrationData()
 {
    Log.Str("BME Calibration data read\r");
 
-   pI2C->SetSlaveAddress(I2C_ADDRESS_BME280);
+   pI2C->SetSlaveAddress(I2C_ADDR);
    pI2C->Write(REG_ADDR_CALIB_T1);
    pI2C->Read(&CalibrationData.u16T1, sizeof(CalibrationData.u16T1));
    pI2C->Write(REG_ADDR_CALIB_T2);
@@ -150,7 +150,7 @@ unsigned char CBME280::ReadChipId()
 
    Log.Str("BME Read chip ID\r");
 
-   pI2C->SetSlaveAddress(I2C_ADDRESS_BME280);
+   pI2C->SetSlaveAddress(I2C_ADDR);
    pI2C->Write(REG_ADDR_ID);
    pI2C->Read(&u8ChipId, sizeof(u8ChipId));
 
@@ -161,7 +161,7 @@ void CBME280::NewMeasurement(bool MeasureTemperature, bool MeasureHumidity, bool
 {
    unsigned char U8RawData[3];
 
-   pI2C->SetSlaveAddress(I2C_ADDRESS_BME280);
+   pI2C->SetSlaveAddress(I2C_ADDR);
 
    if (MeasureHumidity == true)
    {
@@ -191,7 +191,7 @@ signed int CBME280::ReadTemperature()
    unsigned char U8RawData[3];
    signed int s32TemperatureRaw;
 
-   pI2C->SetSlaveAddress(I2C_ADDRESS_BME280);
+   pI2C->SetSlaveAddress(I2C_ADDR);
    pI2C->Write(REG_ADDR_TEMP);
    pI2C->Read(U8RawData, sizeof(U8RawData));
 
@@ -209,7 +209,7 @@ unsigned int CBME280::ReadHumidity()
    unsigned char U8RawData[2];
    signed int s32HumidityRaw;
 
-   pI2C->SetSlaveAddress(I2C_ADDRESS_BME280);
+   pI2C->SetSlaveAddress(I2C_ADDR);
    pI2C->Write(REG_ADDR_HUM);
    pI2C->Read(&U8RawData[0], sizeof(U8RawData));
 
@@ -225,7 +225,7 @@ unsigned int CBME280::ReadPressure()
    unsigned char  U8RawData[3];
    unsigned int   u32PressureRaw;
 
-   pI2C->SetSlaveAddress(I2C_ADDRESS_BME280);
+   pI2C->SetSlaveAddress(I2C_ADDR);
    pI2C->Write(REG_ADDR_PRESS);
    pI2C->Read(U8RawData, sizeof(U8RawData));
 

@@ -1,8 +1,6 @@
 #ifndef HARDWARE_H_
 #define HARDWARE_H_
 
-#define SYSCLK_FREQ		4000000
-
 // Pattern
 #define PIN__PIN              	         LL_GPIO_PIN_
 #define PIN__PORT             	         GPIO
@@ -34,38 +32,16 @@
 #define PIN_BLUENRG_SPI_AF                LL_GPIO_AF_5
 #define SPI_BLUENRG                       SPI1
 
-// HTS221 - Temperature/humidity sensor
-// LPS25HB - Pressure sensor
-#define PIN_SENSOR_I2C_SCL_PIN            LL_GPIO_PIN_8
+// Sensor BME280
+#define PIN_SENSOR_I2C_SCL_PIN            LL_GPIO_PIN_10
 #define PIN_SENSOR_I2C_SCL_PORT           GPIOB
 #define PIN_SENSOR_I2C_SCL_AF             LL_GPIO_AF_4
-#define PIN_SENSOR_I2C_SDA_PIN            LL_GPIO_PIN_9
+#define PIN_SENSOR_I2C_SDA_PIN            LL_GPIO_PIN_11
 #define PIN_SENSOR_I2C_SDA_PORT           GPIOB
 #define PIN_SENSOR_I2C_SDA_AF             LL_GPIO_AF_4
+#define PIN_SENSOR_I2C_PWR_PIN            LL_GPIO_PIN_12
+#define PIN_SENSOR_I2C_PWR_PORT           GPIOB
 #define I2C_SENSOR                        I2C2
-#define PIN_HTS221_I2C_DRDY_PIN           LL_GPIO_PIN_3
-#define PIN_HTS221_I2C_DRDY_PORT          GPIOB
-#define I2C_ADDRESS_HTS221                0x5F
-#define PIN_LPS22HB_I2C_INT_PIN           LL_GPIO_PIN_5
-#define PIN_LPS22HB_I2C_INT_PORT          GPIOB
-#define I2C_ADDRESS_LPS22HB               0x5D
-#define PIN_HTS221_I2C_DRDY_PIN           LL_GPIO_PIN_3
-#define PIN_HTS221_I2C_DRDY_PORT          GPIOB
-#define I2C_ADDRESS_HTS221                0x5F
-#define PIN_LPS22HB_I2C_INT_PIN           LL_GPIO_PIN_5
-#define PIN_LPS22HB_I2C_INT_PORT          GPIOB
-#define I2C_ADDRESS_LPS22HB               0x5D
-
-#define PIN_SENSOR_I2C2_SCL_PIN           LL_GPIO_PIN_10
-#define PIN_SENSOR_I2C2_SCL_PORT          GPIOB
-#define PIN_SENSOR_I2C2_SCL_AF            LL_GPIO_AF_4
-#define PIN_SENSOR_I2C2_SDA_PIN           LL_GPIO_PIN_11
-#define PIN_SENSOR_I2C2_SDA_PORT          GPIOB
-#define PIN_SENSOR_I2C2_SDA_AF            LL_GPIO_AF_4
-#define PIN_SENSOR_I2C2_PWR_PIN           LL_GPIO_PIN_12
-#define PIN_SENSOR_I2C2_PWR_PORT          GPIOB
-#define I2C2_SENSOR                       I2C2
-#define I2C_ADDRESS_BME280                0x76
 
 // LED
 #define PIN_LED_GREEN_PIN                 LL_GPIO_PIN_1

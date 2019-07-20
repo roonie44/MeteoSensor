@@ -1,5 +1,14 @@
 #include "main.h"
 
+void CI2C::Enable()
+{
+   LL_I2C_Enable(pI2C);
+}
+void CI2C::Disable()
+{
+   LL_I2C_Disable(pI2C);
+}
+
 Status CI2C::SetSlaveAddress(unsigned char u8Address)
 {
    SlaveAddress = u8Address;

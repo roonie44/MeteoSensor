@@ -14,6 +14,8 @@ public:
 private:
    static const unsigned int  POWER_ON_TIMEOUT           = 10; // ms
 
+   static const unsigned char I2C_ADDR                   = 0x76;
+
    static const unsigned char REG_ADDR_CALIB_T1          = 0x88;
    static const unsigned char REG_ADDR_CALIB_T2          = 0x8A;
    static const unsigned char REG_ADDR_CALIB_T3          = 0x8C;
