@@ -72,9 +72,18 @@ Status CBME280::PowerOn()
          return Status::TIMEOUT;
       }
    }
-
-   LL_I2C_Enable(I2C2);
    Log.Str("\r");
+   LL_I2C_Enable(I2C2);
+
+   while (ReadChipId() != REG_VAL_CHIP_ID)
+   {
+      if (Clock.IsElapsed(POWER_ON_TIMEOUT))
+      {
+         PowerOff();
+         return Status::FAILURE;
+      }
+   }
+
    return Status::OK;
 }
 void CBME280::PowerOff()
@@ -133,6 +142,19 @@ void CBME280::ReadCalibrationData()
    CalibrationData.s16H5 = CalibrationData.s16H5 >> 4;
    pI2C->Write(REG_ADDR_CALIB_H6);
    pI2C->Read(&CalibrationData.s8H6, sizeof(CalibrationData.s8H6));
+}
+
+unsigned char CBME280::ReadChipId()
+{
+   unsigned char u8ChipId;
+
+   Log.Str("BME Read chip ID\r");
+
+   pI2C->SetSlaveAddress(I2C_ADDRESS_BME280);
+   pI2C->Write(REG_ADDR_ID);
+   pI2C->Read(&u8ChipId, sizeof(u8ChipId));
+
+   return u8ChipId;
 }
 
 void CBME280::NewMeasurement(bool MeasureTemperature, bool MeasureHumidity, bool MeasurePressure)

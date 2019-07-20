@@ -27,6 +27,7 @@ private:
    static const unsigned char REG_ADDR_CALIB_P8          = 0x9C;
    static const unsigned char REG_ADDR_CALIB_P9          = 0x9E;
    static const unsigned char REG_ADDR_CALIB_H1          = 0xA1;
+   static const unsigned char REG_ADDR_ID                = 0xD0;
    static const unsigned char REG_ADDR_CALIB_H2          = 0xE1;
    static const unsigned char REG_ADDR_CALIB_H3          = 0xE3;
    static const unsigned char REG_ADDR_CALIB_H4          = 0xE4;
@@ -39,6 +40,8 @@ private:
    static const unsigned char REG_ADDR_PRESS             = 0xF7;
    static const unsigned char REG_ADDR_TEMP              = 0xFA;
    static const unsigned char REG_ADDR_HUM               = 0xFD;
+
+   static const unsigned char REG_VAL_CHIP_ID            = 0x60;
 
    static const unsigned char REG_MASK_CTRL_MEAS_MODE    = 0x01;  // forced
    static const unsigned char REG_MASK_CTRL_MEAS_OSRS_P  = 0x04;  // oversampling x1
@@ -73,6 +76,7 @@ private:
    signed int TemperatureFine;
 
    void           ReadCalibrationData     ();
+   unsigned char  ReadChipId              ();
    void           NewMeasurement          (bool MeasureTemperature, bool MeasureHumidity, bool MeasurePressure);
    signed int     ReadTemperature         ();
    unsigned int   ReadHumidity            ();
