@@ -9,6 +9,10 @@ class CBlueNRGModule
    static const unsigned char SPI_WRITE_HEADER[5];
    static const unsigned char SPI_READ_HEADER[5];
 
+   static const unsigned char SERVICE_UUID_DEVICE_INFORMATION[2];
+   static const unsigned char CHARACTERISTIC_UUID_HARDWARE_REVISION[2];
+   static const unsigned char CHARACTERISTIC_UUID_SOFTWARE_REVISION[2];
+
    static const unsigned char SERVICE_UUID_ENVIRONMENTAL_SENSOR[2];
    static const unsigned char CHARACTERISTIC_UUID_PRESSURE[2];
    static const unsigned char CHARACTERISTIC_UUID_TEMPERATURE[2];
@@ -22,6 +26,9 @@ class CBlueNRGModule
       STATE_GAP_INIT,
       STATE_CHAR_UPDATE_DEVICE_NAME,
       STATE_CHAR_UPDATE_APPEARANCE,
+      STATE_SERVICE_ADD_DEVICE_INFORMATION,
+      STATE_CHAR_ADD_SOFTWARE_REVISION,
+      STATE_CHAR_UPDATE_SOFTWARE_REVISION,
       STATE_SERVICE_ADD_ENVIRONMENTAL_SENSOR,
       STATE_CHAR_ADD_TEMPERATURE,
       STATE_CHAR_ADD_HUMIDITY,
@@ -42,6 +49,21 @@ class CBlueNRGModule
 
    struct
    {
+      struct
+      {
+         unsigned short u16Handle;
+         struct
+         {
+            struct
+            {
+               unsigned short u16Handle;
+               struct
+               {
+                  unsigned short u16Handle;
+               }Value;
+            }SoftwareRevision;
+         }Characteristic;
+      }DeviceInformation;
       struct
       {
          unsigned short u16Handle;

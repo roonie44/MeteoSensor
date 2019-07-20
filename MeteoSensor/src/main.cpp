@@ -2,6 +2,7 @@
 #include "init.h"
 
 const          char DEVICE_NAME[32] = "MeteoNode";
+const          char BUILD_DATE[32]  = __DATE__ " " __TIME__ ;
 
 CLogModule        Log;
 CPowerModule      Power;
@@ -18,9 +19,7 @@ int main(void)
    Log.Init();
    Log.Str("\r\r\rApplication: MeteoNode\r");
    Log.Str("Builddate: ");
-   Log.Str(__DATE__);
-   Log.Str(", ");
-   Log.Str(__TIME__);
+   Log.Str(BUILD_DATE);
    Log.Str("\r");
 
    CClock::Init();

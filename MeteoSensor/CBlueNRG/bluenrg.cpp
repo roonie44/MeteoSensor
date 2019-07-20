@@ -1,12 +1,16 @@
 #include "main.h"
 
-const unsigned char CBlueNRGModule::SPI_WRITE_HEADER[5]                    = { 0x0A, 0x00, 0x00, 0x00, 0x00, };
-const unsigned char CBlueNRGModule::SPI_READ_HEADER[5]                     = { 0x0B, 0x00, 0x00, 0x00, 0x00, };
+const unsigned char CBlueNRGModule::SPI_WRITE_HEADER[5]                       = { 0x0A, 0x00, 0x00, 0x00, 0x00, };
+const unsigned char CBlueNRGModule::SPI_READ_HEADER[5]                        = { 0x0B, 0x00, 0x00, 0x00, 0x00, };
 
-const unsigned char CBlueNRGModule::SERVICE_UUID_ENVIRONMENTAL_SENSOR[2]   = { 0x1A, 0x18, };
-const unsigned char CBlueNRGModule::CHARACTERISTIC_UUID_PRESSURE[2]        = { 0x6D, 0x2A, };
-const unsigned char CBlueNRGModule::CHARACTERISTIC_UUID_TEMPERATURE[2]     = { 0x6E, 0x2A, };
-const unsigned char CBlueNRGModule::CHARACTERISTIC_UUID_HUMIDITY[2]        = { 0x6F, 0x2A, };
+const unsigned char CBlueNRGModule::SERVICE_UUID_DEVICE_INFORMATION[2]        = { 0x0A, 0x18, };
+const unsigned char CBlueNRGModule::CHARACTERISTIC_UUID_HARDWARE_REVISION[2]  = { 0x27, 0x2A, };
+const unsigned char CBlueNRGModule::CHARACTERISTIC_UUID_SOFTWARE_REVISION[2]  = { 0x28, 0x2A, };
+
+const unsigned char CBlueNRGModule::SERVICE_UUID_ENVIRONMENTAL_SENSOR[2]      = { 0x1A, 0x18, };
+const unsigned char CBlueNRGModule::CHARACTERISTIC_UUID_PRESSURE[2]           = { 0x6D, 0x2A, };
+const unsigned char CBlueNRGModule::CHARACTERISTIC_UUID_TEMPERATURE[2]        = { 0x6E, 0x2A, };
+const unsigned char CBlueNRGModule::CHARACTERISTIC_UUID_HUMIDITY[2]           = { 0x6F, 0x2A, };
 
 void CBlueNRGModule::Init(void)
 {
@@ -50,8 +54,27 @@ void CBlueNRGModule::Handle(void)
    case STATE_CHAR_UPDATE_APPEARANCE:
       Log.StrHexR("BLE char update [APPEARANCE]: ", APPEARANCE, sizeof(APPEARANCE));
       CmdGattUpdateCharValue(u16ServiceHandle, u16AppearanceCharHandle, 0, sizeof(APPEARANCE), &APPEARANCE);
+      State = STATE_SERVICE_ADD_DEVICE_INFORMATION;
+      break;
+
+   case STATE_SERVICE_ADD_DEVICE_INFORMATION:
+      Log.Str("BLE service add [DEVICE INFORMATION]\r");
+      CmdGattAddService(UUID_TYPE_16, SERVICE_UUID_DEVICE_INFORMATION, PRIMARY_SERVICE, 7, &Service.DeviceInformation.u16Handle);
+      State = STATE_CHAR_ADD_SOFTWARE_REVISION;
+      break;
+
+   case STATE_CHAR_ADD_SOFTWARE_REVISION:
+      Log.Str("BLE char add [SOFTWARE REVISION]\r");
+      CmdGattAddChar(Service.DeviceInformation.u16Handle, UUID_TYPE_16, CHARACTERISTIC_UUID_SOFTWARE_REVISION, strlen(BUILD_DATE), CHAR_PROP_READ, 0, 0x04, 16, 0, &Service.DeviceInformation.Characteristic.SoftwareRevision.u16Handle, &Service.DeviceInformation.Characteristic.SoftwareRevision.Value.u16Handle);
+      State = STATE_CHAR_UPDATE_SOFTWARE_REVISION;
+      break;
+
+   case STATE_CHAR_UPDATE_SOFTWARE_REVISION:
+      Log.Str("BLE char update [SOFTWARE REVISION]: ");
+      Log.Str(BUILD_DATE);
+      Log.Str("\r");
+      CmdGattUpdateCharValue(Service.DeviceInformation.u16Handle, Service.DeviceInformation.Characteristic.SoftwareRevision.u16Handle, 0, strlen(BUILD_DATE), BUILD_DATE);
       State = STATE_SERVICE_ADD_ENVIRONMENTAL_SENSOR;
-      //State = STATE_SET_DISCOVERABLE;
       break;
 
    case STATE_SERVICE_ADD_ENVIRONMENTAL_SENSOR:
@@ -62,19 +85,19 @@ void CBlueNRGModule::Handle(void)
 
    case STATE_CHAR_ADD_TEMPERATURE:
       Log.Str("BLE char add [TEMPERATURE]\r");
-      CmdGattAddChar(Service.EnvironmentalSensing.u16Handle, UUID_TYPE_16, CHARACTERISTIC_UUID_TEMPERATURE, 2, CHAR_PROP_READ, 0, 0x04, 16, 0, &Service.EnvironmentalSensing.Characteristic.Temperature.u16Handle, &Service.EnvironmentalSensing.Characteristic.Temperature.Value.u16Handle);
+      CmdGattAddChar(Service.EnvironmentalSensing.u16Handle, UUID_TYPE_16, CHARACTERISTIC_UUID_TEMPERATURE, sizeof(Service.EnvironmentalSensing.Characteristic.Temperature.Value.s16Value), CHAR_PROP_READ, 0, 0x04, 16, 0, &Service.EnvironmentalSensing.Characteristic.Temperature.u16Handle, &Service.EnvironmentalSensing.Characteristic.Temperature.Value.u16Handle);
       State = STATE_CHAR_ADD_HUMIDITY;
       break;
 
    case STATE_CHAR_ADD_HUMIDITY:
       Log.Str("BLE char add [HUMIDITY]\r");
-      CmdGattAddChar(Service.EnvironmentalSensing.u16Handle, UUID_TYPE_16, CHARACTERISTIC_UUID_HUMIDITY, 2, CHAR_PROP_READ, 0, 0x04, 16, 0, &Service.EnvironmentalSensing.Characteristic.Humidity.u16Handle, &Service.EnvironmentalSensing.Characteristic.Humidity.Value.u16Handle);
+      CmdGattAddChar(Service.EnvironmentalSensing.u16Handle, UUID_TYPE_16, CHARACTERISTIC_UUID_HUMIDITY, sizeof(Service.EnvironmentalSensing.Characteristic.Humidity.Value.u16Value), CHAR_PROP_READ, 0, 0x04, 16, 0, &Service.EnvironmentalSensing.Characteristic.Humidity.u16Handle, &Service.EnvironmentalSensing.Characteristic.Humidity.Value.u16Handle);
       State = STATE_CHAR_ADD_PRESSURE;
       break;
 
    case STATE_CHAR_ADD_PRESSURE:
       Log.Str("BLE char add [PRESSURE]\r");
-      CmdGattAddChar(Service.EnvironmentalSensing.u16Handle, UUID_TYPE_16, CHARACTERISTIC_UUID_PRESSURE, 4, CHAR_PROP_READ, 0, 0x04, 16, 0, &Service.EnvironmentalSensing.Characteristic.Pressure.u16Handle, &Service.EnvironmentalSensing.Characteristic.Pressure.Value.u16Handle);
+      CmdGattAddChar(Service.EnvironmentalSensing.u16Handle, UUID_TYPE_16, CHARACTERISTIC_UUID_PRESSURE, sizeof(Service.EnvironmentalSensing.Characteristic.Pressure.Value.u32Value), CHAR_PROP_READ, 0, 0x04, 16, 0, &Service.EnvironmentalSensing.Characteristic.Pressure.u16Handle, &Service.EnvironmentalSensing.Characteristic.Pressure.Value.u16Handle);
       State = STATE_SET_DISCOVERABLE;
       //State = STATE_ADVERTISING;
       break;
