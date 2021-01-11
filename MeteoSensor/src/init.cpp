@@ -30,6 +30,9 @@ void Init_SystemClock(void)
   /* Configure the Vector Table location add offset address ------------------*/
   SCB->VTOR = FLASH_BASE | VECT_TAB_OFFSET; /* Vector Table Relocation in Internal FLASH */
 
+  /* Configure LSI for RTC periodical wakeup */
+  RCC->CSR |= RCC_CSR_LSION;
+  while((RCC->CSR & RCC_CSR_LSIRDY) != RCC_CSR_LSIRDY);
 }
 
 void Init_PeriphClock(void)
@@ -201,8 +204,34 @@ void Init_SensorI2C(void)
    LL_I2C_Enable(I2C_SENSOR);
 }
 
+void Init_Rtc(void)
+{
+   LL_PWR_EnableBkUpAccess();
+   LL_RCC_ForceBackupDomainReset();
+   LL_RCC_ReleaseBackupDomainReset();
+
+   if (LL_RCC_LSI_IsReady())
+   {
+      LL_RCC_SetRTCClockSource(LL_RCC_RTC_CLKSOURCE_LSI);
+      LL_RCC_EnableRTC();
+
+      LL_RTC_DisableWriteProtection(RTC);
+      LL_RTC_WAKEUP_Disable(RTC);
+      while(LL_RTC_IsActiveFlag_WUTW(RTC) == 0);
+      LL_RTC_WAKEUP_SetClock(RTC, LL_RTC_WAKEUPCLOCK_DIV_16);
+      LL_RTC_WAKEUP_SetAutoReload(RTC, 0x4000);
+      LL_RTC_EnableIT_WUT(RTC);
+      LL_RTC_WAKEUP_Enable(RTC);
+      LL_RTC_EnableWriteProtection(RTC);
+   }
+}
+
 void Init_Interrupts(void)
 {
+   LL_EXTI_EnableRisingTrig_0_31(LL_EXTI_LINE_20);
+   LL_EXTI_EnableIT_0_31(LL_EXTI_LINE_20);
+   NVIC_EnableIRQ(RTC_WKUP_IRQn);
+
    // Log TX Transfer Complete
    LL_DMA_EnableIT_TC(DMA_LOG, DMA_CHANNEL_LOG_TX);
    NVIC_EnableIRQ(DMA1_Channel2_IRQn);
@@ -225,6 +254,7 @@ void Init_Hardware(void)
    Init_SystemClock();
    Init_PeriphClock();
    Init_GPIO();
+   Init_Rtc();
 
    Init_LogUSART();
    Init_LogTxDMA();

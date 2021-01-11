@@ -14,6 +14,7 @@
 #include "stm32l4xx_ll_usart.h"
 #include "stm32l4xx_ll_spi.h"
 #include "stm32l4xx_ll_i2c.h"
+#include "stm32l4xx_ll_rtc.h"
 
 #include "hardware_MeteoNode.h"
 #include "types.h"

@@ -11,6 +11,15 @@ void SysTick_Handler(void)
    CClock::Tick();
 }
 
+void RTC_WKUP_IRQHandler(void)
+{
+   LL_EXTI_ClearFlag_0_31(LL_EXTI_LINE_20);
+
+   LL_RTC_DisableWriteProtection(RTC);
+   LL_RTC_ClearFlag_WUT(RTC);
+   LL_RTC_EnableWriteProtection(RTC);
+}
+
 void DMA1_Channel2_IRQHandler(void)
 {
    unsigned int ISR = DMA1->ISR;
@@ -66,7 +75,7 @@ void* g_pfnVectors[] __attribute__ ((section (".isr_vector"))) =
    (void*)&Default_Handler,            // WWDG_IRQHandler,
    (void*)&Default_Handler,            // PVD_PVM_IRQHandler,
    (void*)&Default_Handler,            // TAMP_STAMP_IRQHandler,
-   (void*)&Default_Handler,            // RTC_WKUP_IRQHandler,
+   (void*)&RTC_WKUP_IRQHandler,
    (void*)&Default_Handler,            // FLASH_IRQHandler,
    (void*)&Default_Handler,            // RCC_IRQHandler,
    (void*)&EXTI0_IRQHandler,

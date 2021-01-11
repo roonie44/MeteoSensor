@@ -58,6 +58,6 @@ void CPowerModule::EnterStopMode(void)
    }
 
    __enable_irq();
-
+   Log.Str("WakeUp\r");
    CClock::Init();
 }
