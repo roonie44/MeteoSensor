@@ -34,6 +34,10 @@ class CBlueNRGModule
       STATE_CHAR_ADD_HUMIDITY,
       STATE_CHAR_ADD_PRESSURE,
       STATE_SET_DISCOVERABLE,
+      STATE_SET_ADVERTISING_PARAMS,
+      STATE_SET_ADVERTISING_DATA,
+      STATE_SET_SCAN_RESPONSE_DATA,
+      STATE_SET_ADVERTISE_ENABLE,
       STATE_ADVERTISING,
       STATE_CONNECTED,
       STATE_UPDATE_DATA,
@@ -75,7 +79,7 @@ class CBlueNRGModule
                struct
                {
                   unsigned short u16Handle;
-                  signed short   s16Value;      // 0,01 [°C]
+                  signed short   s16Value;      // 0,01 [ï¿½C]
                }Value;
                bool           RequestRead;
                bool           Updated;
@@ -115,6 +119,10 @@ class CBlueNRGModule
    int  SendCommand                 (unsigned short u16OPCode, void* pParams, int s32ParamsLen);
 
    int  CmdWriteConfigData          (unsigned char u8Offset, unsigned char u8Length, void* pData);
+   int  CmdLeSetAdvertisingParams   (void);
+   int  CmdLeSetAdvertisingData     (void);
+   int  CmdLeSetScanResponseData    (void);
+   int  CmdLeSetAdvertiseEnable     (void);
    int  CmdGattInit                 (void);
    int  CmdGattAddService           (unsigned char u8UUIDType, const unsigned char* U8UUID, unsigned char u8ServiceType, unsigned char u8MaxAttributeRecords, unsigned short* p16ServiceHandle);
    int  CmdGattAddChar              (unsigned short u16ServiceHandle, unsigned char u8UUIDType, const unsigned char* U8UUID, unsigned char u8ValueLength, unsigned char u8Properties, unsigned char u8Permissions, unsigned char u8EventMask, unsigned char u8EncryptKeySize, unsigned char u8ValueVarLen, unsigned short* p16CharHandle, unsigned short* p16CharValueHandle);

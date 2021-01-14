@@ -98,13 +98,38 @@ void CBlueNRGModule::Handle(void)
    case STATE_CHAR_ADD_PRESSURE:
       Log.Str("BLE char add [PRESSURE]\r");
       CmdGattAddChar(Service.EnvironmentalSensing.u16Handle, UUID_TYPE_16, CHARACTERISTIC_UUID_PRESSURE, sizeof(Service.EnvironmentalSensing.Characteristic.Pressure.Value.u32Value), CHAR_PROP_READ, 0, 0x04, 16, 0, &Service.EnvironmentalSensing.Characteristic.Pressure.u16Handle, &Service.EnvironmentalSensing.Characteristic.Pressure.Value.u16Handle);
-      State = STATE_SET_DISCOVERABLE;
+      //State = STATE_SET_DISCOVERABLE;
       //State = STATE_ADVERTISING;
+      State = STATE_SET_ADVERTISING_PARAMS;
       break;
 
-   case STATE_SET_DISCOVERABLE:
-      Log.Str("BLE GAP Set discoverable\r");
-      CmdGapSetDiscoverable();
+//   case STATE_SET_DISCOVERABLE:
+//      Log.Str("BLE GAP Set discoverable\r");
+//      CmdGapSetDiscoverable();
+//      State = STATE_ADVERTISING;
+//      break;
+
+   case STATE_SET_ADVERTISING_PARAMS:
+      Log.Str("BLE LE Set Advertising Params\r");
+      CmdLeSetAdvertisingParams();
+      State = STATE_SET_ADVERTISING_DATA;
+      break;
+
+   case STATE_SET_ADVERTISING_DATA:
+      Log.Str("BLE LE Set Advertising Data\r");
+      CmdLeSetAdvertisingData();
+      State = STATE_SET_SCAN_RESPONSE_DATA;
+      break;
+
+   case STATE_SET_SCAN_RESPONSE_DATA:
+      Log.Str("BLE LE Set Scan Response Data\r");
+      CmdLeSetScanResponseData();
+      State = STATE_SET_ADVERTISE_ENABLE;
+      break;
+
+   case STATE_SET_ADVERTISE_ENABLE:
+      Log.Str("BLE LE Set Advertise Enable\r");
+      CmdLeSetAdvertiseEnable();
       State = STATE_ADVERTISING;
       break;
 

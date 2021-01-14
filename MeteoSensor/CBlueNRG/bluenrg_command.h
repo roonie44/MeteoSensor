@@ -20,6 +20,37 @@ struct TCmdParamsWriteConfigData
 
 /******************************************************************************/
 
+#define CMD_OPCODE_LE_SET_ADVERTISING_PARAMETERS   0x2006
+struct TCmdParamsSetAdvertisingParameters
+{
+   unsigned short u16IntervalMin;
+   unsigned short u16IntervalMax;
+   unsigned char  u8AdvertisingType;
+   unsigned char  u8OwnAddressType;
+   unsigned char  u8DirectAddressType;
+   unsigned char  U8DirectAddress[6];
+   unsigned char  u8ChannelMap;
+   unsigned char  u8FilterPolicy;
+};
+#define CMD_OPCODE_LE_SET_ADVERTISING_DATA         0x2008
+struct TCmdParamsSetAdvertisingData
+{
+   unsigned char  u8AdvertisingDataLen;
+   unsigned char  U8AdvertisingData[31];
+};
+#define CMD_OPCODE_LE_SET_SCAN_RESP_DATA           0x2009
+struct TCmdParamsSetScanRespData
+{
+   unsigned char  u8ScanRespDataLen;
+   unsigned char  U8ScanRespData[31];
+};
+#define CMD_OPCODE_LE_SET_ADVERTISE_ENABLE         0x200A
+struct TCmdParamsSetAdvertiseEnable
+{
+   unsigned char  u8AdvertisingEnable;
+};
+/******************************************************************************/
+
 #define CMD_OPCODE_GATT_INIT           0xFD01
 
 #define CMD_OPCODE_GATT_ADD_SERVICE    0xFD02
