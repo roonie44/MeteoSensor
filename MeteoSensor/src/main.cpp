@@ -6,6 +6,7 @@ const          char BUILD_DATE[32]  = __DATE__ " " __TIME__ ;
 
 CLogModule        Log;
 CPowerModule      Power;
+CRTC              Rtc;
 CSpiModule        Spi;
 CBlueNRGModule    BlueNRG;
 CI2C              I2C(I2C2);
@@ -23,6 +24,7 @@ int main(void)
    Log.Str("\r");
 
    CClock::Init();
+   Rtc.SetWakeUpPeriod(30);
    Sensor.Init();
    BlueNRG.Init();
 

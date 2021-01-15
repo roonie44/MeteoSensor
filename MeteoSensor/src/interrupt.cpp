@@ -18,6 +18,8 @@ void RTC_WKUP_IRQHandler(void)
    LL_RTC_DisableWriteProtection(RTC);
    LL_RTC_ClearFlag_WUT(RTC);
    LL_RTC_EnableWriteProtection(RTC);
+
+   Rtc.InterruptWakeUp();
 }
 
 void DMA1_Channel2_IRQHandler(void)

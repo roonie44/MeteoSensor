@@ -214,15 +214,6 @@ void Init_Rtc(void)
    {
       LL_RCC_SetRTCClockSource(LL_RCC_RTC_CLKSOURCE_LSI);
       LL_RCC_EnableRTC();
-
-      LL_RTC_DisableWriteProtection(RTC);
-      LL_RTC_WAKEUP_Disable(RTC);
-      while(LL_RTC_IsActiveFlag_WUTW(RTC) == 0);
-      LL_RTC_WAKEUP_SetClock(RTC, LL_RTC_WAKEUPCLOCK_DIV_16);
-      LL_RTC_WAKEUP_SetAutoReload(RTC, 0x4000);
-      LL_RTC_EnableIT_WUT(RTC);
-      LL_RTC_WAKEUP_Enable(RTC);
-      LL_RTC_EnableWriteProtection(RTC);
    }
 }
 

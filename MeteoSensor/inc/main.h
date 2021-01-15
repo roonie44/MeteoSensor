@@ -21,6 +21,7 @@
 
 #include "../CLog/log.hpp"
 #include "../CPower/power.hpp"
+#include "../CClock/rtc.hpp"
 #include "../CClock/clock.hpp"
 #include "../CBlueNRG/spi.hpp"
 #include "../CBlueNRG/bluenrg.hpp"
@@ -32,6 +33,7 @@ extern const char       BUILD_DATE[32];
 
 extern CLogModule       Log;
 extern CPowerModule     Power;
+extern CRTC             Rtc;
 extern CSpiModule       Spi;
 extern CBlueNRGModule   BlueNRG;
 extern CI2C             I2C;

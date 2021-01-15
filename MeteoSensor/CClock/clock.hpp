@@ -9,12 +9,12 @@ class CClock
                 unsigned int u32TicksStart;
 
 public:
-               CClock      () { this->Set(); }
-   static void Init        ();
-   static void Deinit      ();
-   static void Tick        ();
-          void Set         ();
-          bool IsElapsed   (unsigned int u32Mills);
-          void Wait        (unsigned int u32Mills);
+               CClock            () { this->Set(); }
+   static void Init              ();
+   static void Deinit            ();
+   static void Tick              ();
+          void Set               ();
+          bool IsElapsed         (unsigned int u32Mills);
+          void Wait              (unsigned int u32Mills);
 };
 #endif /* CLOCK_HPP_ */
