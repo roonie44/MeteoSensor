@@ -1,5 +1,4 @@
-#ifndef SPI_HPP_
-#define SPI_HPP_
+#pragma once
 
 class CSpiModule
 {
@@ -8,5 +7,3 @@ public:
    void           EnableCS       (void);
    void           DisableCS      (void);
 };
-
-#endif /* SPI_HPP_ */

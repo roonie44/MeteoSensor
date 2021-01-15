@@ -1,5 +1,4 @@
-#ifndef BLUENRG_COMMAND_H_
-#define BLUENRG_COMMAND_H_
+#pragma once
 
 #pragma pack(1)
 struct TCommandPacket
@@ -154,5 +153,3 @@ struct TCmdParamsSetDicoverable
    unsigned short u16ConnIntervalMax;
 };
 #pragma pack()
-
-#endif /* BLUENRG_COMMAND_H_ */

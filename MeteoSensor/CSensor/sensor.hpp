@@ -1,5 +1,5 @@
-#ifndef SENSOR_HPP_
-#define SENSOR_HPP_
+#pragma once
+
 #include "BME280.hpp"
 
 class CSensorModule
@@ -23,5 +23,3 @@ private:
    eDataType      RequestDataType;
    unsigned int   u32CallbackId;
 };
-
-#endif /* SENSOR_HPP_ */

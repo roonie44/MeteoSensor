@@ -1,5 +1,4 @@
-#ifndef BLUENRG_TYPES_H_
-#define BLUENRG_TYPES_H_
+#pragma once
 
 struct TSpiHeader
 {
@@ -49,13 +48,3 @@ enum eCharacteristicProperties
    CHAR_PROP_SIGNED_WRITE        = 0x40,
    CHAR_PROP_EXT                 = 0x80,
 };
-
-#pragma pack(1)
-
-
-
-#pragma pack()
-
-
-
-#endif /* BLUENRG_TYPES_H_ */

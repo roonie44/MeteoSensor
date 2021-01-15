@@ -1,5 +1,4 @@
-#ifndef POWER_HPP_
-#define POWER_HPP_
+#pragma once
 
 class CPowerModule
 {
@@ -14,5 +13,3 @@ public:
 //private:
    void EnterStopMode   (void);
 };
-
-#endif /* POWER_HPP_ */

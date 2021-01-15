@@ -1,5 +1,4 @@
-#ifndef BME280_HPP_
-#define BME280_HPP_
+#pragma once
 
 class CBME280
 {
@@ -89,5 +88,3 @@ private:
    unsigned int   CompensateHumidity      (signed int s32HumidityRaw);
    unsigned int   CompensatePressure      (signed int s32PressureRaw);
 };
-
-#endif /* BME280_HPP_ */

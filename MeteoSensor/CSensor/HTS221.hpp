@@ -1,5 +1,4 @@
-#ifndef HTS221_HPP_
-#define HTS221_HPP_
+#pragma once
 
 class CHTS221
 {
@@ -52,5 +51,3 @@ private:
    void           ReadTemperature        (void);
    void           ReadHumidity           (void);
 };
-
-#endif /* HTS221_HPP_ */

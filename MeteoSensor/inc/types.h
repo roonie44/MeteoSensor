@@ -1,5 +1,4 @@
-#ifndef _TYPES_H_
-#define _TYPES_H_
+#pragma once
 
 #define  ASCII(x)	                              (((x) < 10) ? ((x) + 0x30) : ((x) + 0x37))
 #define  HEX(x)                                 ((x) - 0x30)
@@ -66,7 +65,3 @@ typedef union
 		unsigned int 	uNibbleHHH	: 4;
 	};
 }TUINT;
-
-
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef LPS22HB_HPP_
-#define LPS22HB_HPP_
+#pragma once
 
 class CLPS22HB
 {
@@ -18,5 +17,3 @@ private:
    void           NewMeasurement        (void);
    void           ReadPressure          (void);
 };
-
-#endif /* LPS22HB_HPP_ */

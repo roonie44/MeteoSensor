@@ -1,5 +1,5 @@
-#ifndef I2C_CPP_
-#define I2C_CPP_
+#pragma once
+
 #include "types.h"
 
 class CI2C
@@ -17,7 +17,3 @@ public:
    Status   Write             (unsigned char u8Data);
    Status   Read              (void *pData, int s32Length);
 };
-
-
-
-#endif /* I2C_CPP_ */

@@ -1,5 +1,4 @@
-#ifndef _LOG_HPP_
-#define _LOG_HPP_
+#pragma once
 
 #define LOG_OUTPUT_BUFFER_SIZE   8192
 #define LOG_INPUT_BUFFER_SIZE   256
@@ -32,5 +31,3 @@ public:
    void  StrBlob  (const char* pString, unsigned char* U8Blob, unsigned int u32Length);
    void  StrBlobR (const char* pString, unsigned char* U8Blob, unsigned int u32Length);
 };
-
-#endif // _LOG_H_

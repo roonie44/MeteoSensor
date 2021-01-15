@@ -1,5 +1,5 @@
-#ifndef BLUENRG_HPP_
-#define BLUENRG_HPP_
+#pragma once
+
 #include "bluenrg_types.h"
 #include "bluenrg_command.h"
 #include "bluenrg_event.h"
@@ -147,10 +147,4 @@ public:
    void Handle                      (void);
    void Callback                    (unsigned int u32CallbackId, void *pValue);
    void HandleIRQ                   (void);
-
-
 };
-
-
-
-#endif /* BLUENRG_HPP_ */

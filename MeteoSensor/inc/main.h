@@ -1,5 +1,4 @@
-#ifndef MAIN_HPP_
-#define MAIN_HPP_
+#pragma once
 
 #include <string.h>
 #include "stm32l4xx.h"
@@ -42,4 +41,3 @@ extern CSensorModule    Sensor;
 
 int   main           (void);
 void  CommandExecute (unsigned int u32CommandCode);
-#endif // MAIN_HPP_

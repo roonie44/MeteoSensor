@@ -1,5 +1,4 @@
-#ifndef BLUENRG_EVENT_H_
-#define BLUENRG_EVENT_H_
+#pragma once
 
 #pragma pack(1)
 struct TEventPacket
@@ -94,5 +93,3 @@ struct TEventParamsBlueGattReadPermitReqest
    unsigned short u16Offset;
 };
 #pragma pack()
-
-#endif /* BLUENRG_EVENT_H_ */

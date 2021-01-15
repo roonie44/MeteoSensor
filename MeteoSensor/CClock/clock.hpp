@@ -1,5 +1,4 @@
-#ifndef CLOCK_HPP_
-#define CLOCK_HPP_
+#pragma once
 
 class CClock
 {
@@ -17,4 +16,3 @@ public:
           bool IsElapsed         (unsigned int u32Mills);
           void Wait              (unsigned int u32Mills);
 };
-#endif /* CLOCK_HPP_ */
