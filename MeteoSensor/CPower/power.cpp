@@ -1,22 +1,28 @@
 #include "main.h"
 #include "init.h"
+#include "power.hpp"
 
-void CPowerModule::Handle(void)
+CPowerModule::CPowerModule()
 {
-   if(bSleepDeny == false)
+   CEvents::Subscribe(this);
+}
+
+void CPowerModule::Handle()
+{
+   EnterStopMode();
+}
+
+void CPowerModule::Event()
+{
+   switch(CEvents::GetEventId())
    {
-      EnterStopMode();
+      case EventId::DeviceIdle:
+         CModule::HandleRequest(this);
+         break;
+
+      default:
+         return;
    }
-}
-
-void CPowerModule::SleepDeny(void)
-{
-   bSleepDeny = true;
-}
-
-void CPowerModule::SleepAllow(void)
-{
-   bSleepDeny = false;
 }
 
 void CPowerModule::EnterStopMode(void)
@@ -28,7 +34,7 @@ void CPowerModule::EnterStopMode(void)
 
    __disable_irq();
 
-   if (bSleepDeny == false)
+   if (CModule::IsIdle())
    {
       Init_Stop();
 
@@ -58,6 +64,5 @@ void CPowerModule::EnterStopMode(void)
    }
 
    __enable_irq();
-   Log.Str("WakeUp\r");
    CClock::Init();
 }

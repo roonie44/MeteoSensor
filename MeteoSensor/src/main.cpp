@@ -24,19 +24,13 @@ int main(void)
    Log.Str("\r");
 
    CClock::Init();
-   Rtc.SetWakeUpPeriod(30);
+   Rtc.SetPeriodicWakeUp(60);
    Sensor.Init();
    BlueNRG.Init();
 
    while(1)
    {
-      if(BlueNRG.HandleRequest)
-         BlueNRG.Handle();
-
-      if(Sensor.HandleRequest)
-         Sensor.Handle();
-
-      Power.Handle();
+      CModule::NextHandle();
    }
 }
 

@@ -16,14 +16,10 @@ void CBlueNRGModule::Init(void)
 {
    // Release reset
    LL_GPIO_SetOutputPin(PIN_BLUENRG_SPI_RESET_PORT, PIN_BLUENRG_SPI_RESET_PIN);
-   Power.SleepDeny();
 }
 
 void CBlueNRGModule::Handle(void)
 {
-   HandleRequest = false;
-   Power.SleepAllow();
-
    if(DataToRead())
    {
       HandlePendingData();
@@ -232,8 +228,7 @@ int CBlueNRGModule::HandlePendingData(void)
    return 0;
 }
 
-void CBlueNRGModule::HandleIRQ(void)
+void CBlueNRGModule::InterruptIRQ(void)
 {
-   this->HandleRequest = true;
-   Power.SleepDeny();
+   HandleRequest(this);
 }

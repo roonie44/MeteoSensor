@@ -1,11 +1,7 @@
 #include "main.h"
+#include "events.hpp"
 
-CRTC::CRTC()
-{
-
-}
-
-void CRTC::SetWakeUpPeriod(unsigned short u16Seconds)
+void CRTC::SetPeriodicWakeUp(unsigned short u16Seconds)
 {
    LL_RTC_DisableWriteProtection(RTC);
    LL_RTC_WAKEUP_Disable(RTC);
@@ -22,7 +18,5 @@ void CRTC::SetWakeUpPeriod(unsigned short u16Seconds)
 
 void CRTC::InterruptWakeUp()
 {
-   Sensor.DataRequest(CSensorModule::TEMPERATURE, 0);
-   Sensor.DataRequest(CSensorModule::HUMIDITY, 0);
-   Sensor.DataRequest(CSensorModule::PRESSURE, 0);
+   CEvents::Publish(EventId::PeriodicWakeUp);
 }

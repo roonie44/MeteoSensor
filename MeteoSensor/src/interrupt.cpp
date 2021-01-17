@@ -48,7 +48,7 @@ void USART3_IRQHandler(void)
 void EXTI0_IRQHandler(void)
 {
    EXTI->PR1 = EXTI_PR1_PIF0;
-   BlueNRG.HandleIRQ();
+   BlueNRG.InterruptIRQ();
 }
 
 void Default_Handler(void)

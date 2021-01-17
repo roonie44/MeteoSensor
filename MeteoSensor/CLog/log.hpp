@@ -1,14 +1,16 @@
 #pragma once
 
-#define LOG_OUTPUT_BUFFER_SIZE   8192
-#define LOG_INPUT_BUFFER_SIZE   256
+#include "module.hpp"
 
-class CLogModule
+class CLogModule : public CModule
 {
-   unsigned char  U8OutputBuffer [LOG_OUTPUT_BUFFER_SIZE];
-   unsigned char  U8InputBuffer  [LOG_INPUT_BUFFER_SIZE];
-   int            s32IdxWrite;
-   int            s32IdxSend;
+   static constexpr int LOG_OUTPUT_BUFFER_SIZE  = 8192;
+   static constexpr int LOG_INPUT_BUFFER_SIZE   = 256;
+
+   unsigned char        U8OutputBuffer [LOG_OUTPUT_BUFFER_SIZE];
+   unsigned char        U8InputBuffer  [LOG_INPUT_BUFFER_SIZE];
+   int                  s32IdxWrite;
+   int                  s32IdxSend;
 
 public:
    void  Init     (void);

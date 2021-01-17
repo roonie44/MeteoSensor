@@ -1,9 +1,10 @@
 #pragma once
 
-class CRTC
+#include "module.hpp"
+
+class CRTC : public CModule
 {
 public:
-         CRTC              ();
-   void  SetWakeUpPeriod   (unsigned short u16Seconds);
+   void  SetPeriodicWakeUp (unsigned short u16Seconds);
    void  InterruptWakeUp   ();
 };

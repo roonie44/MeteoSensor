@@ -1,15 +1,15 @@
 #pragma once
 
-class CPowerModule
+#include "module.hpp"
+#include "events.hpp"
+
+class CPowerModule  : public CModule
 {
-   bool bSleepDeny;
-
 public:
-   void Handle          (void);
+         CPowerModule   ();
+   void  Handle         ();
+   void  Event          ();
 
-   void SleepDeny       (void);
-   void SleepAllow      (void);
-
-//private:
+private:
    void EnterStopMode   (void);
 };

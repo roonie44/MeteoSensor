@@ -1,10 +1,11 @@
 #pragma once
 
+#include "module.hpp"
 #include "bluenrg_types.h"
 #include "bluenrg_command.h"
 #include "bluenrg_event.h"
 
-class CBlueNRGModule
+class CBlueNRGModule : public CModule
 {
    static const unsigned char SPI_WRITE_HEADER[5];
    static const unsigned char SPI_READ_HEADER[5];
@@ -141,10 +142,8 @@ class CBlueNRGModule
 
 
 public:
-   bool HandleRequest;
-
    void Init                        (void);
    void Handle                      (void);
    void Callback                    (unsigned int u32CallbackId, void *pValue);
-   void HandleIRQ                   (void);
+   void InterruptIRQ                (void);
 };

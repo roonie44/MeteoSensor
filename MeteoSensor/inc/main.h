@@ -25,6 +25,7 @@
 #include "../CBlueNRG/spi.hpp"
 #include "../CBlueNRG/bluenrg.hpp"
 #include "../CSensor/i2c.hpp"
+#include "../CSensor/BME280.hpp"
 #include "../CSensor/sensor.hpp"
 
 extern const char       DEVICE_NAME[32];
