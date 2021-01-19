@@ -19,6 +19,7 @@
 #include "types.h"
 
 #include "../CLog/log.hpp"
+#include "../CData/data.hpp"
 #include "../CPower/power.hpp"
 #include "../CClock/rtc.hpp"
 #include "../CClock/clock.hpp"
@@ -32,6 +33,7 @@ extern const char       DEVICE_NAME[32];
 extern const char       BUILD_DATE[32];
 
 extern CLogModule       Log;
+extern CData            Data;
 extern CPowerModule     Power;
 extern CRTC             Rtc;
 extern CSpiModule       Spi;

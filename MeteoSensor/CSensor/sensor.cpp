@@ -12,48 +12,17 @@ void CSensorModule::Init(void)
 
 void CSensorModule::Handle(void)
 {
-//   if (MeasurementRequest)
-//   {
-//      MeasurementRequest = false;
+   signed int s32Temperature;
+   if (BME280.GetTemperature(s32Temperature) == Status::OK)
+      Data.SetTemperature(s32Temperature);
 
-      signed int s32Temperature;
-      unsigned int u32Humidity;
-      unsigned int u32Pressure;
+   unsigned int u32Humidity;
+   if (BME280.GetHumidity(u32Humidity) == Status::OK)
+      Data.SetHumidity(u32Humidity);
 
-      if (BME280.GetTemperature(s32Temperature) == Status::OK)
-         ;
-
-      if (BME280.GetHumidity(u32Humidity) == Status::OK)
-         ;
-
-      if (BME280.GetPressure(u32Pressure) == Status::OK)
-         ;
-//   }
-   //HandleRequest = false;
-
-   switch (RequestDataType)
-   {
-   case TEMPERATURE:
-      signed int s32Temperature;
-      if (BME280.GetTemperature(s32Temperature) == Status::OK && u32CallbackId != 0)
-         BlueNRG.Callback(u32CallbackId, &s32Temperature);
-      break;
-
-   case HUMIDITY:
-      unsigned int u32Humidity;
-      if(BME280.GetHumidity(u32Humidity) == Status::OK && u32CallbackId != 0)
-         BlueNRG.Callback(u32CallbackId, &u32Humidity);
-      break;
-
-   case PRESSURE:
-      unsigned int u32Pressure;
-      if(BME280.GetPressure(u32Pressure) == Status::OK && u32CallbackId != 0)
-         BlueNRG.Callback(u32CallbackId, &u32Pressure);
-      break;
-
-   default:
-      break;
-   }
+   unsigned int u32Pressure;
+   if (BME280.GetPressure(u32Pressure) == Status::OK)
+      Data.SetPressure(u32Pressure);
 }
 
 void CSensorModule::Event()
@@ -72,6 +41,5 @@ void CSensorModule::Event()
 void CSensorModule::DataRequest(eDataType DataType, unsigned int u32CallbackId)
 {
    this->RequestDataType   = DataType;
-   //this->HandleRequest     = true;
    this->u32CallbackId     = u32CallbackId;
 }

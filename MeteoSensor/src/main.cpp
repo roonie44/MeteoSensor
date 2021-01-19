@@ -5,6 +5,7 @@ const          char DEVICE_NAME[32] = "MeteoNode";
 const          char BUILD_DATE[32]  = __DATE__ " " __TIME__ ;
 
 CLogModule        Log;
+CData             Data;
 CPowerModule      Power;
 CRTC              Rtc;
 CSpiModule        Spi;
@@ -24,7 +25,7 @@ int main(void)
    Log.Str("\r");
 
    CClock::Init();
-   Rtc.SetPeriodicWakeUp(60);
+   Rtc.SetPeriodicWakeUp(Data.GetPeriodicWakeUpInterval());
    Sensor.Init();
    BlueNRG.Init();
 

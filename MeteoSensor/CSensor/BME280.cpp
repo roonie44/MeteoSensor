@@ -19,7 +19,7 @@ Status CBME280::GetTemperature(signed int& s32Temperature)
    s32Temperature = ReadTemperature();
    PowerOff();
 
-   Log.StrDec("BME Temp ", s32Temperature / 100);
+   Log.StrDec("BME Temperature ", s32Temperature / 100);
    Log.StrDecR(".", s32Temperature % 100);
    return Status::OK;
 }
