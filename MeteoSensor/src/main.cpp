@@ -42,15 +42,15 @@ void CommandExecute(unsigned int u32CommandCode)
    switch(u32CommandCode)
    {
    case 1:
-      Sensor.DataRequest(CSensorModule::eDataType::TEMPERATURE, 0);
+      Sensor.DataRequest(CSensorModule::eDataType::Temperature);
       break;
 
    case 2:
-      Sensor.DataRequest(CSensorModule::eDataType::HUMIDITY, 0);
+      Sensor.DataRequest(CSensorModule::eDataType::Humidity);
       break;
 
    case 3:
-      Sensor.DataRequest(CSensorModule::eDataType::PRESSURE, 0);
+      Sensor.DataRequest(CSensorModule::eDataType::Pressure);
       break;
    }
 }

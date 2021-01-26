@@ -12,6 +12,11 @@ const unsigned char CBlueNRGModule::CHARACTERISTIC_UUID_PRESSURE[2]           = 
 const unsigned char CBlueNRGModule::CHARACTERISTIC_UUID_TEMPERATURE[2]        = { 0x6E, 0x2A, };
 const unsigned char CBlueNRGModule::CHARACTERISTIC_UUID_HUMIDITY[2]           = { 0x6F, 0x2A, };
 
+CBlueNRGModule::CBlueNRGModule(void)
+{
+   CEvents::Subscribe(this);
+}
+
 void CBlueNRGModule::Init(void)
 {
    // Release reset
@@ -20,12 +25,12 @@ void CBlueNRGModule::Init(void)
 
 void CBlueNRGModule::Handle(void)
 {
-   if(DataToRead())
+   if (IsDataToRead())
    {
       HandlePendingData();
    }
 
-   switch(State)
+   switch (State)
    {
    case STATE_GATT_INIT:
       Log.Str("BLE GATT Init\r");
@@ -114,14 +119,14 @@ void CBlueNRGModule::Handle(void)
    case STATE_SET_ADVERTISING_DATA:
       Log.Str("BLE LE Set Advertising Data\r");
       CmdLeSetAdvertisingData();
-      State = STATE_SET_SCAN_RESPONSE_DATA;
-      break;
-
-   case STATE_SET_SCAN_RESPONSE_DATA:
-      Log.Str("BLE LE Set Scan Response Data\r");
-      CmdLeSetScanResponseData();
       State = STATE_SET_ADVERTISE_ENABLE;
       break;
+
+//   case STATE_SET_SCAN_RESPONSE_DATA:
+//      Log.Str("BLE LE Set Scan Response Data\r");
+//      CmdLeSetScanResponseData();
+//      State = STATE_SET_ADVERTISE_ENABLE;
+//      break;
 
    case STATE_SET_ADVERTISE_ENABLE:
       Log.Str("BLE LE Set Advertise Enable\r");
@@ -130,52 +135,92 @@ void CBlueNRGModule::Handle(void)
       break;
 
    case STATE_ADVERTISING:
+      if (bDataUpdate)
+      {
+         bDataUpdate = false;
+         CmdLeSetScanResponseData();
+      }
       break;
 
    case STATE_CONNECTED:
+      if (bDataUpdate == true)
+      {
+         bDataUpdate = false;
+
+         signed short   s16TemperatureValue  = Data.GetTemperature();
+         unsigned short u16HumidityValue     = Data.GetHumidity();
+         unsigned int   u32PressureValue     = Data.GetPressure();
+
+         CmdGattUpdateCharValue(Service.EnvironmentalSensing.u16Handle, Service.EnvironmentalSensing.Characteristic.Temperature.u16Handle,   0, sizeof(s16TemperatureValue),  &s16TemperatureValue);
+         CmdGattUpdateCharValue(Service.EnvironmentalSensing.u16Handle, Service.EnvironmentalSensing.Characteristic.Humidity.u16Handle,      0, sizeof(u16HumidityValue),     &u16HumidityValue);
+         CmdGattUpdateCharValue(Service.EnvironmentalSensing.u16Handle, Service.EnvironmentalSensing.Characteristic.Pressure.u16Handle,      0, sizeof(u32PressureValue),     &u32PressureValue);
+
+         if (bRequestRead == true)
+         {
+            bRequestRead = false;
+
+            CmdGattAllowRead(Connection.u16Handle);
+         }
+      }
       break;
 
    case STATE_UPDATE_DATA:
-      if(Service.EnvironmentalSensing.Characteristic.Temperature.RequestRead == true && Service.EnvironmentalSensing.Characteristic.Temperature.Updated == false)
-         break;
-      if(Service.EnvironmentalSensing.Characteristic.Humidity.RequestRead == true && Service.EnvironmentalSensing.Characteristic.Humidity.Updated == false)
-         break;
-      if(Service.EnvironmentalSensing.Characteristic.Pressure.RequestRead == true && Service.EnvironmentalSensing.Characteristic.Pressure.Updated == false)
-         break;
-      CmdGattAllowRead(Connection.u16Handle);
-
-      Service.EnvironmentalSensing.Characteristic.Temperature.RequestRead  = false;
-      Service.EnvironmentalSensing.Characteristic.Humidity.RequestRead     = false;
-      Service.EnvironmentalSensing.Characteristic.Pressure.RequestRead     = false;
+//      if(Service.EnvironmentalSensing.Characteristic.Temperature.RequestRead == true && Service.EnvironmentalSensing.Characteristic.Temperature.Updated == false)
+//         break;
+//      if(Service.EnvironmentalSensing.Characteristic.Humidity.RequestRead == true && Service.EnvironmentalSensing.Characteristic.Humidity.Updated == false)
+//         break;
+//      if(Service.EnvironmentalSensing.Characteristic.Pressure.RequestRead == true && Service.EnvironmentalSensing.Characteristic.Pressure.Updated == false)
+//         break;
+//      CmdGattAllowRead(Connection.u16Handle);
+//
+//      Service.EnvironmentalSensing.Characteristic.Temperature.RequestRead  = false;
+//      Service.EnvironmentalSensing.Characteristic.Humidity.RequestRead     = false;
+//      Service.EnvironmentalSensing.Characteristic.Pressure.RequestRead     = false;
       State = STATE_CONNECTED;
       break;
    }
 }
 
-void CBlueNRGModule::Callback(unsigned int u32CallbackId, void *pValue)
+void CBlueNRGModule::Event()
 {
-   if (u32CallbackId == Service.EnvironmentalSensing.Characteristic.Temperature.Value.u16Handle)
+   switch (CEvents::GetEventId())
    {
-      Service.EnvironmentalSensing.Characteristic.Temperature.Value.s16Value  = *(signed short*)pValue;
-      CmdGattUpdateCharValue(Service.EnvironmentalSensing.u16Handle, Service.EnvironmentalSensing.Characteristic.Temperature.u16Handle, 0, sizeof(Service.EnvironmentalSensing.Characteristic.Temperature.Value.s16Value), &Service.EnvironmentalSensing.Characteristic.Temperature.Value.s16Value);
-      Service.EnvironmentalSensing.Characteristic.Temperature.Updated   = true;
-      return;
-   }
-   if (u32CallbackId == Service.EnvironmentalSensing.Characteristic.Humidity.Value.u16Handle)
-   {
-      Service.EnvironmentalSensing.Characteristic.Humidity.Value.u16Value  = *(unsigned short*)pValue;
-      CmdGattUpdateCharValue(Service.EnvironmentalSensing.u16Handle, Service.EnvironmentalSensing.Characteristic.Humidity.u16Handle, 0, sizeof(Service.EnvironmentalSensing.Characteristic.Humidity.Value.u16Value), &Service.EnvironmentalSensing.Characteristic.Humidity.Value.u16Value);
-      Service.EnvironmentalSensing.Characteristic.Humidity.Updated   = true;
-      return;
-   }
-   if (u32CallbackId == Service.EnvironmentalSensing.Characteristic.Pressure.Value.u16Handle)
-   {
-      Service.EnvironmentalSensing.Characteristic.Pressure.Value.u32Value  = *(unsigned int*)pValue;
-      CmdGattUpdateCharValue(Service.EnvironmentalSensing.u16Handle, Service.EnvironmentalSensing.Characteristic.Pressure.u16Handle, 0, sizeof(Service.EnvironmentalSensing.Characteristic.Pressure.Value.u32Value), &Service.EnvironmentalSensing.Characteristic.Pressure.Value.u32Value);
-      Service.EnvironmentalSensing.Characteristic.Pressure.Updated   = true;
-      return;
+      case EventId::DataUpdateTemperature:
+      case EventId::DataUpdateHumidity:
+      case EventId::DataUpdatePressure:
+         bDataUpdate = true;
+         CModule::HandleRequest(this);
+         break;
+
+      default:
+         break;
    }
 }
+
+//void CBlueNRGModule::Callback(unsigned int u32CallbackId, void *pValue)
+//{
+//   if (u32CallbackId == Service.EnvironmentalSensing.Characteristic.Temperature.Value.u16Handle)
+//   {
+//      Service.EnvironmentalSensing.Characteristic.Temperature.Value.s16Value  = *(signed short*)pValue;
+//      CmdGattUpdateCharValue(Service.EnvironmentalSensing.u16Handle, Service.EnvironmentalSensing.Characteristic.Temperature.u16Handle, 0, sizeof(Service.EnvironmentalSensing.Characteristic.Temperature.Value.s16Value), &Service.EnvironmentalSensing.Characteristic.Temperature.Value.s16Value);
+//      Service.EnvironmentalSensing.Characteristic.Temperature.Updated   = true;
+//      return;
+//   }
+//   if (u32CallbackId == Service.EnvironmentalSensing.Characteristic.Humidity.Value.u16Handle)
+//   {
+//      Service.EnvironmentalSensing.Characteristic.Humidity.Value.u16Value  = *(unsigned short*)pValue;
+//      CmdGattUpdateCharValue(Service.EnvironmentalSensing.u16Handle, Service.EnvironmentalSensing.Characteristic.Humidity.u16Handle, 0, sizeof(Service.EnvironmentalSensing.Characteristic.Humidity.Value.u16Value), &Service.EnvironmentalSensing.Characteristic.Humidity.Value.u16Value);
+//      Service.EnvironmentalSensing.Characteristic.Humidity.Updated   = true;
+//      return;
+//   }
+//   if (u32CallbackId == Service.EnvironmentalSensing.Characteristic.Pressure.Value.u16Handle)
+//   {
+//      Service.EnvironmentalSensing.Characteristic.Pressure.Value.u32Value  = *(unsigned int*)pValue;
+//      CmdGattUpdateCharValue(Service.EnvironmentalSensing.u16Handle, Service.EnvironmentalSensing.Characteristic.Pressure.u16Handle, 0, sizeof(Service.EnvironmentalSensing.Characteristic.Pressure.Value.u32Value), &Service.EnvironmentalSensing.Characteristic.Pressure.Value.u32Value);
+//      Service.EnvironmentalSensing.Characteristic.Pressure.Updated   = true;
+//      return;
+//   }
+//}
 
 int CBlueNRGModule::SendPacketViaSpi(unsigned char* U8Packet, int s32PacketLen)
 {
@@ -197,7 +242,7 @@ int CBlueNRGModule::SendPacketViaSpi(unsigned char* U8Packet, int s32PacketLen)
    return 0;
 }
 
-bool CBlueNRGModule::DataToRead(void)
+bool CBlueNRGModule::IsDataToRead(void)
 {
    return LL_GPIO_IsInputPinSet(PIN_BLUENRG_SPI_IRQ_PORT, PIN_BLUENRG_SPI_IRQ_PIN) ? true : false;
 }
@@ -206,7 +251,7 @@ int CBlueNRGModule::HandlePendingData(void)
 {
    TSpiHeader  SpiHeader;
 
-   while(DataToRead())
+   while (IsDataToRead())
    {
       memcpy(&SpiHeader, SPI_READ_HEADER, sizeof(TSpiHeader));
 

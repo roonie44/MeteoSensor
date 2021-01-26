@@ -66,6 +66,13 @@ int CBlueNRGModule::CmdLeSetAdvertisingData(void)
 int CBlueNRGModule::CmdLeSetScanResponseData(void)
 {
    TCmdParamsSetScanRespData  Params = { 0, };
+   CData::TScanResponseData   ScanResponseData;
+
+   ScanResponseData.ServiceData.s16TemperatureValue   = Data.GetTemperature();
+   ScanResponseData.ManufacturerData.u16HumidityValue = Data.GetHumidity();
+   ScanResponseData.ManufacturerData.u32PressureValue = Data.GetPressure();
+   memcpy(Params.U8ScanRespData, &ScanResponseData, sizeof(ScanResponseData));
+   Params.u8ScanRespDataLen = sizeof(ScanResponseData);
 
    return SendCommand(CMD_OPCODE_LE_SET_SCAN_RESP_DATA, &Params, sizeof(Params));
 }

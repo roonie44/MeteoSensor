@@ -12,17 +12,29 @@ void CSensorModule::Init(void)
 
 void CSensorModule::Handle(void)
 {
-   signed int s32Temperature;
-   if (BME280.GetTemperature(s32Temperature) == Status::OK)
-      Data.SetTemperature(s32Temperature);
+   if (MeasurementRequest.bTemperature)
+   {
+      MeasurementRequest.bTemperature = false;
+      signed int s32Temperature;
+      if (BME280.GetTemperature(s32Temperature) == Status::OK)
+         Data.SetTemperature(s32Temperature);
+   }
 
-   unsigned int u32Humidity;
-   if (BME280.GetHumidity(u32Humidity) == Status::OK)
-      Data.SetHumidity(u32Humidity);
+   if (MeasurementRequest.bHumidity)
+   {
+      MeasurementRequest.bHumidity = false;
+      unsigned int u32Humidity;
+      if (BME280.GetHumidity(u32Humidity) == Status::OK)
+         Data.SetHumidity(u32Humidity);
+   }
 
-   unsigned int u32Pressure;
-   if (BME280.GetPressure(u32Pressure) == Status::OK)
-      Data.SetPressure(u32Pressure);
+   if (MeasurementRequest.bPressure)
+   {
+      MeasurementRequest.bPressure = false;
+      unsigned int u32Pressure;
+      if (BME280.GetPressure(u32Pressure) == Status::OK)
+         Data.SetPressure(u32Pressure);
+   }
 }
 
 void CSensorModule::Event()
@@ -30,7 +42,9 @@ void CSensorModule::Event()
    switch (CEvents::GetEventId())
    {
       case EventId::PeriodicWakeUp:
-         HandleRequest(this);
+         DataRequest(eDataType::Temperature);
+         DataRequest(eDataType::Humidity);
+         DataRequest(eDataType::Pressure);
          break;
 
       default:
@@ -38,8 +52,22 @@ void CSensorModule::Event()
    }
 }
 
-void CSensorModule::DataRequest(eDataType DataType, unsigned int u32CallbackId)
+void CSensorModule::DataRequest(eDataType DataType)
 {
-   this->RequestDataType   = DataType;
-   this->u32CallbackId     = u32CallbackId;
+   switch (DataType)
+   {
+      case eDataType::Temperature:
+         MeasurementRequest.bTemperature  = true;
+         break;
+
+      case eDataType::Humidity:
+         MeasurementRequest.bHumidity     = true;
+         break;
+
+      case eDataType::Pressure:
+         MeasurementRequest.bPressure     = true;
+         break;
+   }
+
+   HandleRequest(this);
 }

@@ -159,26 +159,20 @@ void CBlueNRGModule::EventReadPermitRequest(unsigned short u16AttributeHandle)
 {
    if (u16AttributeHandle == Service.EnvironmentalSensing.Characteristic.Temperature.Value.u16Handle)
    {
-      Sensor.DataRequest(CSensorModule::eDataType::TEMPERATURE, u16AttributeHandle);
-      Service.EnvironmentalSensing.Characteristic.Temperature.RequestRead  = true;
-      Service.EnvironmentalSensing.Characteristic.Temperature.Updated      = false;
+      Sensor.DataRequest(CSensorModule::eDataType::Temperature);
+      bRequestRead = true;
    }
    else if (u16AttributeHandle == Service.EnvironmentalSensing.Characteristic.Humidity.Value.u16Handle)
    {
-      Sensor.DataRequest(CSensorModule::eDataType::HUMIDITY, u16AttributeHandle);
-      Service.EnvironmentalSensing.Characteristic.Humidity.RequestRead     = true;
-      Service.EnvironmentalSensing.Characteristic.Humidity.Updated         = false;
+      Sensor.DataRequest(CSensorModule::eDataType::Humidity);
+      bRequestRead = true;
    }
    else if (u16AttributeHandle == Service.EnvironmentalSensing.Characteristic.Pressure.Value.u16Handle)
    {
-      Sensor.DataRequest(CSensorModule::eDataType::PRESSURE, u16AttributeHandle);
-      Service.EnvironmentalSensing.Characteristic.Pressure.RequestRead     = true;
-      Service.EnvironmentalSensing.Characteristic.Pressure.Updated         = false;
+      Sensor.DataRequest(CSensorModule::eDataType::Pressure);
+      bRequestRead = true;
    }
-   //else return;
    else CmdGattAllowRead(Connection.u16Handle);
-
-   State = STATE_UPDATE_DATA;
 }
 
 void CBlueNRGModule::EventConnected(unsigned short u16ConnectionHandle)

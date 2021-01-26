@@ -116,6 +116,9 @@ class CBlueNRGModule : public CModule
       unsigned short u16Handle;
    }Connection;
 
+   bool bDataUpdate;
+   bool bRequestRead;
+
    int  SendPacketViaSpi            (unsigned char* U8Packet, int s32PacketLen);
    int  SendCommand                 (unsigned short u16OPCode, void* pParams, int s32ParamsLen);
 
@@ -132,7 +135,7 @@ class CBlueNRGModule : public CModule
    int  CmdGapInit                  (void);
    int  CmdGapSetDiscoverable       (void);
 
-   bool DataToRead                  (void);
+   bool IsDataToRead                (void);
    int  HandlePendingData           (void);
    void ParseEvent                  (TEventPacket* pEventPacket, int s32EventPacketLen);
    void EventCommandComplete        (unsigned short u16OPCode, void* pReturn, int s32ReturnLen);
@@ -142,8 +145,9 @@ class CBlueNRGModule : public CModule
 
 
 public:
+        CBlueNRGModule              (void);
    void Init                        (void);
    void Handle                      (void);
-   void Callback                    (unsigned int u32CallbackId, void *pValue);
+   void Event                       ();
    void InterruptIRQ                (void);
 };

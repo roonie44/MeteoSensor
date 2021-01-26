@@ -5,23 +5,26 @@
 class CSensorModule : public CModule
 {
 public:
-   enum eDataType
+   enum class eDataType
    {
-      NONE,
-      TEMPERATURE,
-      HUMIDITY,
-      PRESSURE,
+      Temperature,
+      Humidity,
+      Pressure,
    };
+
 
          CSensorModule  ();
    void  Handle         ();
    void  Event          ();
 
    void  Init           ();
-   void  DataRequest    (eDataType DataType, unsigned int u32CallbackId);
+   void  DataRequest    (eDataType DataType);
 
 private:
-   bool           MeasurementRequest;
-   eDataType      RequestDataType;
-   unsigned int   u32CallbackId;
+   struct
+   {
+      bool  bTemperature;
+      bool  bHumidity;
+      bool  bPressure;
+   } MeasurementRequest;
 };
