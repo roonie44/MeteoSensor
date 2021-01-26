@@ -34,14 +34,11 @@ class CBlueNRGModule : public CModule
       STATE_CHAR_ADD_TEMPERATURE,
       STATE_CHAR_ADD_HUMIDITY,
       STATE_CHAR_ADD_PRESSURE,
-      STATE_SET_DISCOVERABLE,
       STATE_SET_ADVERTISING_PARAMS,
       STATE_SET_ADVERTISING_DATA,
-      STATE_SET_SCAN_RESPONSE_DATA,
       STATE_SET_ADVERTISE_ENABLE,
       STATE_ADVERTISING,
       STATE_CONNECTED,
-      STATE_UPDATE_DATA,
    }State;
 
    unsigned short *p16ServiceHandle;
@@ -80,10 +77,7 @@ class CBlueNRGModule : public CModule
                struct
                {
                   unsigned short u16Handle;
-                  signed short   s16Value;      // 0,01 [�C]
                }Value;
-               bool           RequestRead;
-               bool           Updated;
             }Temperature;
             struct
             {
@@ -91,10 +85,7 @@ class CBlueNRGModule : public CModule
                struct
                {
                   unsigned short u16Handle;
-                  unsigned short u16Value;      // 0,01 [%]
                }Value;
-               bool           RequestRead;
-               bool           Updated;
             }Humidity;
             struct
             {
@@ -102,10 +93,7 @@ class CBlueNRGModule : public CModule
                struct
                {
                   unsigned short u16Handle;
-                  unsigned int   u32Value;      // 0.1 [Pa]
                }Value;
-               bool           RequestRead;
-               bool           Updated;
             }Pressure;
          }Characteristic;
       }EnvironmentalSensing;
@@ -117,7 +105,7 @@ class CBlueNRGModule : public CModule
    }Connection;
 
    bool bDataUpdate;
-   bool bRequestRead;
+   bool bDataReadRequest;
 
    int  SendPacketViaSpi            (unsigned char* U8Packet, int s32PacketLen);
    int  SendCommand                 (unsigned short u16OPCode, void* pParams, int s32ParamsLen);

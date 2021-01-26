@@ -160,17 +160,17 @@ void CBlueNRGModule::EventReadPermitRequest(unsigned short u16AttributeHandle)
    if (u16AttributeHandle == Service.EnvironmentalSensing.Characteristic.Temperature.Value.u16Handle)
    {
       Sensor.DataRequest(CSensorModule::eDataType::Temperature);
-      bRequestRead = true;
+      bDataReadRequest = true;
    }
    else if (u16AttributeHandle == Service.EnvironmentalSensing.Characteristic.Humidity.Value.u16Handle)
    {
       Sensor.DataRequest(CSensorModule::eDataType::Humidity);
-      bRequestRead = true;
+      bDataReadRequest = true;
    }
    else if (u16AttributeHandle == Service.EnvironmentalSensing.Characteristic.Pressure.Value.u16Handle)
    {
       Sensor.DataRequest(CSensorModule::eDataType::Pressure);
-      bRequestRead = true;
+      bDataReadRequest = true;
    }
    else CmdGattAllowRead(Connection.u16Handle);
 }
@@ -185,6 +185,6 @@ void CBlueNRGModule::EventConnected(unsigned short u16ConnectionHandle)
 void CBlueNRGModule::EventDisconnectionComplete(unsigned short u16ConnectionHandle)
 {
    Connection.u16Handle = 0;
-   State = STATE_SET_DISCOVERABLE;
+   State = STATE_ADVERTISING;
    LL_GPIO_ResetOutputPin(PIN_LED_GREEN_PORT, PIN_LED_GREEN_PIN);
 }

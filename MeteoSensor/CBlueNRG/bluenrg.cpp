@@ -86,29 +86,21 @@ void CBlueNRGModule::Handle(void)
 
    case STATE_CHAR_ADD_TEMPERATURE:
       Log.Str("BLE char add [TEMPERATURE]\r");
-      CmdGattAddChar(Service.EnvironmentalSensing.u16Handle, UUID_TYPE_16, CHARACTERISTIC_UUID_TEMPERATURE, sizeof(Service.EnvironmentalSensing.Characteristic.Temperature.Value.s16Value), CHAR_PROP_READ, 0, 0x04, 16, 0, &Service.EnvironmentalSensing.Characteristic.Temperature.u16Handle, &Service.EnvironmentalSensing.Characteristic.Temperature.Value.u16Handle);
+      CmdGattAddChar(Service.EnvironmentalSensing.u16Handle, UUID_TYPE_16, CHARACTERISTIC_UUID_TEMPERATURE, sizeof(signed short), CHAR_PROP_READ, 0, 0x04, 16, 0, &Service.EnvironmentalSensing.Characteristic.Temperature.u16Handle, &Service.EnvironmentalSensing.Characteristic.Temperature.Value.u16Handle);
       State = STATE_CHAR_ADD_HUMIDITY;
       break;
 
    case STATE_CHAR_ADD_HUMIDITY:
       Log.Str("BLE char add [HUMIDITY]\r");
-      CmdGattAddChar(Service.EnvironmentalSensing.u16Handle, UUID_TYPE_16, CHARACTERISTIC_UUID_HUMIDITY, sizeof(Service.EnvironmentalSensing.Characteristic.Humidity.Value.u16Value), CHAR_PROP_READ, 0, 0x04, 16, 0, &Service.EnvironmentalSensing.Characteristic.Humidity.u16Handle, &Service.EnvironmentalSensing.Characteristic.Humidity.Value.u16Handle);
+      CmdGattAddChar(Service.EnvironmentalSensing.u16Handle, UUID_TYPE_16, CHARACTERISTIC_UUID_HUMIDITY, sizeof(unsigned short), CHAR_PROP_READ, 0, 0x04, 16, 0, &Service.EnvironmentalSensing.Characteristic.Humidity.u16Handle, &Service.EnvironmentalSensing.Characteristic.Humidity.Value.u16Handle);
       State = STATE_CHAR_ADD_PRESSURE;
       break;
 
    case STATE_CHAR_ADD_PRESSURE:
       Log.Str("BLE char add [PRESSURE]\r");
-      CmdGattAddChar(Service.EnvironmentalSensing.u16Handle, UUID_TYPE_16, CHARACTERISTIC_UUID_PRESSURE, sizeof(Service.EnvironmentalSensing.Characteristic.Pressure.Value.u32Value), CHAR_PROP_READ, 0, 0x04, 16, 0, &Service.EnvironmentalSensing.Characteristic.Pressure.u16Handle, &Service.EnvironmentalSensing.Characteristic.Pressure.Value.u16Handle);
-      //State = STATE_SET_DISCOVERABLE;
-      //State = STATE_ADVERTISING;
+      CmdGattAddChar(Service.EnvironmentalSensing.u16Handle, UUID_TYPE_16, CHARACTERISTIC_UUID_PRESSURE, sizeof(unsigned int), CHAR_PROP_READ, 0, 0x04, 16, 0, &Service.EnvironmentalSensing.Characteristic.Pressure.u16Handle, &Service.EnvironmentalSensing.Characteristic.Pressure.Value.u16Handle);
       State = STATE_SET_ADVERTISING_PARAMS;
       break;
-
-//   case STATE_SET_DISCOVERABLE:
-//      Log.Str("BLE GAP Set discoverable\r");
-//      CmdGapSetDiscoverable();
-//      State = STATE_ADVERTISING;
-//      break;
 
    case STATE_SET_ADVERTISING_PARAMS:
       Log.Str("BLE LE Set Advertising Params\r");
@@ -121,12 +113,6 @@ void CBlueNRGModule::Handle(void)
       CmdLeSetAdvertisingData();
       State = STATE_SET_ADVERTISE_ENABLE;
       break;
-
-//   case STATE_SET_SCAN_RESPONSE_DATA:
-//      Log.Str("BLE LE Set Scan Response Data\r");
-//      CmdLeSetScanResponseData();
-//      State = STATE_SET_ADVERTISE_ENABLE;
-//      break;
 
    case STATE_SET_ADVERTISE_ENABLE:
       Log.Str("BLE LE Set Advertise Enable\r");
@@ -155,28 +141,13 @@ void CBlueNRGModule::Handle(void)
          CmdGattUpdateCharValue(Service.EnvironmentalSensing.u16Handle, Service.EnvironmentalSensing.Characteristic.Humidity.u16Handle,      0, sizeof(u16HumidityValue),     &u16HumidityValue);
          CmdGattUpdateCharValue(Service.EnvironmentalSensing.u16Handle, Service.EnvironmentalSensing.Characteristic.Pressure.u16Handle,      0, sizeof(u32PressureValue),     &u32PressureValue);
 
-         if (bRequestRead == true)
+         if (bDataReadRequest == true)
          {
-            bRequestRead = false;
+            bDataReadRequest = false;
 
             CmdGattAllowRead(Connection.u16Handle);
          }
       }
-      break;
-
-   case STATE_UPDATE_DATA:
-//      if(Service.EnvironmentalSensing.Characteristic.Temperature.RequestRead == true && Service.EnvironmentalSensing.Characteristic.Temperature.Updated == false)
-//         break;
-//      if(Service.EnvironmentalSensing.Characteristic.Humidity.RequestRead == true && Service.EnvironmentalSensing.Characteristic.Humidity.Updated == false)
-//         break;
-//      if(Service.EnvironmentalSensing.Characteristic.Pressure.RequestRead == true && Service.EnvironmentalSensing.Characteristic.Pressure.Updated == false)
-//         break;
-//      CmdGattAllowRead(Connection.u16Handle);
-//
-//      Service.EnvironmentalSensing.Characteristic.Temperature.RequestRead  = false;
-//      Service.EnvironmentalSensing.Characteristic.Humidity.RequestRead     = false;
-//      Service.EnvironmentalSensing.Characteristic.Pressure.RequestRead     = false;
-      State = STATE_CONNECTED;
       break;
    }
 }
