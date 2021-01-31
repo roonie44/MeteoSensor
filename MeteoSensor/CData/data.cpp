@@ -1,12 +1,6 @@
 #include "data.hpp"
 #include "../inc/events.hpp"
 
-CData::CData()
-{
-   Configuration.u16PeriodicWakeUpInterval   = 15;    // s
-   Configuration.u16AdvertisingInterval      = 1280;  // ms
-}
-
 void CData::SetTemperature(signed int s32Temperature)
 {
    Measurements.s32Temperature = s32Temperature;

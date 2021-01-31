@@ -45,10 +45,8 @@ void CBlueNRGModule::Handle(void)
       break;
 
    case STATE_CHAR_UPDATE_DEVICE_NAME:
-      Log.Str("BLE char update [DEVICE_NAME]: ");
-      Log.Str(DEVICE_NAME);
-      Log.Str("\r");
-      CmdGattUpdateCharValue(u16ServiceHandle, u16DeviceNameCharHandle, 0, strlen(DEVICE_NAME), DEVICE_NAME);
+      Log.Str("BLE char update [DEVICE_NAME]\r");
+      CmdGattUpdateCharValue(u16ServiceHandle, u16DeviceNameCharHandle, 0, strlen(Data.GetDeviceName()), Data.GetDeviceName());
       State = STATE_CHAR_UPDATE_APPEARANCE;
       break;
 
@@ -66,15 +64,13 @@ void CBlueNRGModule::Handle(void)
 
    case STATE_CHAR_ADD_SOFTWARE_REVISION:
       Log.Str("BLE char add [SOFTWARE REVISION]\r");
-      CmdGattAddChar(Service.DeviceInformation.u16Handle, UUID_TYPE_16, CHARACTERISTIC_UUID_SOFTWARE_REVISION, strlen(BUILD_DATE), CHAR_PROP_READ, 0, 0x04, 16, 0, &Service.DeviceInformation.Characteristic.SoftwareRevision.u16Handle, &Service.DeviceInformation.Characteristic.SoftwareRevision.Value.u16Handle);
+      CmdGattAddChar(Service.DeviceInformation.u16Handle, UUID_TYPE_16, CHARACTERISTIC_UUID_SOFTWARE_REVISION, strlen(Data.GetFirmwareVersion()), CHAR_PROP_READ, 0, 0x04, 16, 0, &Service.DeviceInformation.Characteristic.SoftwareRevision.u16Handle, &Service.DeviceInformation.Characteristic.SoftwareRevision.Value.u16Handle);
       State = STATE_CHAR_UPDATE_SOFTWARE_REVISION;
       break;
 
    case STATE_CHAR_UPDATE_SOFTWARE_REVISION:
-      Log.Str("BLE char update [SOFTWARE REVISION]: ");
-      Log.Str(BUILD_DATE);
-      Log.Str("\r");
-      CmdGattUpdateCharValue(Service.DeviceInformation.u16Handle, Service.DeviceInformation.Characteristic.SoftwareRevision.u16Handle, 0, strlen(BUILD_DATE), BUILD_DATE);
+      Log.Str("BLE char update [SOFTWARE REVISION]\r");
+      CmdGattUpdateCharValue(Service.DeviceInformation.u16Handle, Service.DeviceInformation.Characteristic.SoftwareRevision.u16Handle, 0, strlen(Data.GetFirmwareVersion()), Data.GetFirmwareVersion());
       State = STATE_SERVICE_ADD_ENVIRONMENTAL_SENSOR;
       break;
 

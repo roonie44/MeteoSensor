@@ -1,9 +1,6 @@
 #include "main.h"
 #include "init.h"
 
-const          char DEVICE_NAME[32] = "MeteoNode";
-const          char BUILD_DATE[32]  = __DATE__ " " __TIME__ ;
-
 CLogModule        Log;
 CData             Data;
 CPowerModule      Power;
@@ -19,9 +16,12 @@ int main(void)
    Init_Hardware();
 
    Log.Init();
-   Log.Str("\r\r\rApplication: MeteoNode\r");
-   Log.Str("Builddate: ");
-   Log.Str(BUILD_DATE);
+   Log.Str("\r\r\rApplication: ");
+   Log.Str(Data.GetDeviceName());
+   Log.Str("\rVersion: ");
+   Log.Str(Data.GetFirmwareVersion());
+   Log.Str("\rBuilddate: ");
+   Log.Str(Data.GetBuildDate());
    Log.Str("\r");
 
    CClock::Init();

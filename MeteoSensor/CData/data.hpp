@@ -4,14 +4,15 @@ class CData
 {
    struct
    {
-      char           DeviceName[32] = "MeteoNode";
-      char           BuildData[32]  = __DATE__ " " __TIME__ ;
+      const char     DeviceName[32]       = "MeteoNode";
+      const char     BuildDate[32]        = __DATE__ " " __TIME__ ;
+      const char     FirmwareVersion[16]  = "v1.1";
    } Information;
 
    struct
    {
-      unsigned short u16PeriodicWakeUpInterval;
-      unsigned short u16AdvertisingInterval;
+      unsigned short u16PeriodicWakeUpInterval  = 15;    // s
+      unsigned short u16AdvertisingInterval     = 1280;  // ms
    } Configuration;
 
    struct
@@ -43,8 +44,9 @@ public:
    };
 #pragma pack()
 
-                  CData();
-
+   const char*    GetDeviceName()            { return Information.DeviceName; }
+   const char*    GetBuildDate()             { return Information.BuildDate; }
+   const char*    GetFirmwareVersion()       { return Information.FirmwareVersion; }
 
    unsigned short GetPeriodicWakeUpInterval(){ return Configuration.u16PeriodicWakeUpInterval; }
    unsigned short GetAdvertisingInterval()   { return Configuration.u16AdvertisingInterval; }

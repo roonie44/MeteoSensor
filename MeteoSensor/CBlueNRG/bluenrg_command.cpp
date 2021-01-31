@@ -1,4 +1,5 @@
 #include "main.h"
+#include "string.h"
 
 int CBlueNRGModule::SendCommand(unsigned short u16OPCode, void* pParams, int s32ParamsLen)
 {
@@ -29,8 +30,13 @@ int CBlueNRGModule::CmdLeSetAdvertisingParams(void)
 {
    TCmdParamsSetAdvertisingParameters  Params;
 
-   Params.u16IntervalMin         = 0x0800;   // 1.28s
-   Params.u16IntervalMax         = 0x0800;   // 1.28s
+   signed int s32AdvertisingIntervalMin = Data.GetAdvertisingInterval() - 50;
+   signed int s32AdvertisingIntervalMax = Data.GetAdvertisingInterval() + 50;
+   s32AdvertisingIntervalMin = (s32AdvertisingIntervalMin * 1000) / 625; // 1 ms -> 625 us, range 0x0020 to 0x4000
+   s32AdvertisingIntervalMax = (s32AdvertisingIntervalMax * 1000) / 625; // 1 ms -> 625 us, range 0x0020 to 0x4000
+
+   Params.u16IntervalMin         = MIN(MAX(s32AdvertisingIntervalMin, 0x20), 0x4000);
+   Params.u16IntervalMax         = MIN(MAX(s32AdvertisingIntervalMax, 0x20), 0x4000);
    Params.u8AdvertisingType      = 0;        // Connectable undirected advertising (ADV_IND)
    Params.u8OwnAddressType       = 1;        // Random Device Address
    Params.u8DirectAddressType    = 1;        // Random Device Address
@@ -45,17 +51,16 @@ int CBlueNRGModule::CmdLeSetAdvertisingData(void)
 {
    TCmdParamsSetAdvertisingData  Params = { 0, };
 
-   char U8LocalName[strlen(DEVICE_NAME) + 2];
-   U8LocalName[0]          = strlen(DEVICE_NAME) + 1;
+   char U8LocalName[strlen(Data.GetDeviceName()) + 2];
+   U8LocalName[0]          = strlen(Data.GetDeviceName()) + 1;
    U8LocalName[1]          = 0x09;     // AD_TYPE_COMPLETE_LOCAL_NAME
-   if (strlen(DEVICE_NAME) > 0)
-      strcpy(&U8LocalName[2], DEVICE_NAME);
+   if (strlen(Data.GetDeviceName()) > 0)
+      strcpy(&U8LocalName[2], Data.GetDeviceName());
 
    unsigned char U8Flags[] = { 2, 0x01, 0x02, };
 
    memcpy(Params.U8AdvertisingData + Params.u8AdvertisingDataLen, U8LocalName, sizeof(U8LocalName));
    Params.u8AdvertisingDataLen += sizeof(U8LocalName);
-   //memset(Params.U8AdvertisingData, 0x00, sizeof(Params.U8AdvertisingData));
 
    memcpy(Params.U8AdvertisingData + Params.u8AdvertisingDataLen, U8Flags, sizeof(U8Flags));
    Params.u8AdvertisingDataLen += sizeof(U8Flags);
@@ -189,37 +194,7 @@ int CBlueNRGModule::CmdGapInit(void)
 
    Params.u8Role           = 0x01;  // Peripherial
    Params.u8PrivacyEnabled = 0;
-   Params.u8NameCharLength = strlen(DEVICE_NAME);
+   Params.u8NameCharLength = strlen(Data.GetDeviceName());
 
    return SendCommand(CMD_OPCODE_GAP_INIT, &Params, sizeof(Params));
-}
-
-int CBlueNRGModule::CmdGapSetDiscoverable(void)
-{
-   TCmdParamsSetDicoverable Params;
-            char U8LocalName[strlen(DEVICE_NAME) + 1];
-   unsigned char U8Params[sizeof(Params) + sizeof(U8LocalName)];
-
-   if (strlen(DEVICE_NAME) > 0)
-   {
-      U8LocalName[0]          = 0x09;     // AD_TYPE_COMPLETE_LOCAL_NAME
-      strcpy(&U8LocalName[1], DEVICE_NAME);
-   }
-   else
-      U8LocalName[0]          = 0;
-
-   Params.u8AdvertisingType   = 0;        // Connectable undirected advertising (ADV_IND)
-   Params.u16IntervalMin      = 0x0800;   // 1.28s
-   Params.u16IntervalMax      = 0x0800;   // 1.28s
-   Params.u8OwnAddressType    = 1;        // Public Device Address
-   Params.u8FilterPolicy      = 0;        //  Allow scan request from any, allow connect request from any
-   Params.u8LocalNameLen      = strlen(U8LocalName);
-   Params.u8ServiceUUIDLen    = 0;
-   Params.u16ConnIntervalMin  = 0xFFFF;   // No specific minimum
-   Params.u16ConnIntervalMax  = 0xFFFF;   // No specific maximum
-
-   memcpy(&U8Params[0], &Params, offsetof(TCmdParamsSetDicoverable, u8ServiceUUIDLen));
-   memcpy(&U8Params[offsetof(TCmdParamsSetDicoverable, u8ServiceUUIDLen)], U8LocalName, sizeof(U8LocalName));
-   memcpy(&U8Params[offsetof(TCmdParamsSetDicoverable, u8ServiceUUIDLen) + sizeof(U8LocalName)], &Params.u8ServiceUUIDLen, sizeof(TCmdParamsSetDicoverable) - offsetof(TCmdParamsSetDicoverable, u8ServiceUUIDLen));
-   return SendCommand(CMD_OPCODE_GAP_SET_DISCOVERABLE, U8Params, sizeof(U8Params));
 }

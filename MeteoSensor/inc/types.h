@@ -2,6 +2,8 @@
 
 #define  ASCII(x)	                              (((x) < 10) ? ((x) + 0x30) : ((x) + 0x37))
 #define  HEX(x)                                 ((x) - 0x30)
+#define  MIN(x,y)                               ((x < y) ? x : y)
+#define  MAX(x,y)                               ((x > y) ? x : y)
 
 enum Status
 {

@@ -29,8 +29,6 @@
 #include "../CSensor/BME280.hpp"
 #include "../CSensor/sensor.hpp"
 
-extern const char       DEVICE_NAME[32];
-extern const char       BUILD_DATE[32];
 
 extern CLogModule       Log;
 extern CData            Data;

@@ -121,7 +121,6 @@ class CBlueNRGModule : public CModule
    int  CmdGattUpdateCharValue      (unsigned short u16ServiceHandle, unsigned short u16CharacteristicHandle, unsigned char u8ValueOffset, unsigned char u8ValueLength, const void* pValue);
    int  CmdGattAllowRead            (unsigned short u16ConnectionHandle);
    int  CmdGapInit                  (void);
-   int  CmdGapSetDiscoverable       (void);
 
    bool IsDataToRead                (void);
    int  HandlePendingData           (void);
