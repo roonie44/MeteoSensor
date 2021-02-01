@@ -11,7 +11,7 @@ class CData
 
    struct
    {
-      unsigned short u16PeriodicWakeUpInterval  = 15;    // s
+      unsigned short u16PeriodicWakeUpInterval  = 180;   // s
       unsigned short u16AdvertisingInterval     = 1280;  // ms
    } Configuration;
 

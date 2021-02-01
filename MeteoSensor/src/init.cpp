@@ -215,6 +215,17 @@ void Init_Rtc(void)
       LL_RCC_SetRTCClockSource(LL_RCC_RTC_CLKSOURCE_LSI);
       LL_RCC_EnableRTC();
    }
+
+   LL_RTC_DisableWriteProtection(RTC);
+   LL_RTC_EnableInitMode(RTC);
+   while (LL_RTC_IsActiveFlag_INIT(RTC) == 0);
+
+   // 128 x 250 = 32000 (LSI)
+   LL_RTC_SetAsynchPrescaler(RTC, 0x7F);  // 128
+   LL_RTC_SetSynchPrescaler(RTC, 0xF9);   // 250
+
+   LL_RTC_DisableInitMode(RTC);
+   LL_RTC_EnableWriteProtection(RTC);
 }
 
 void Init_Interrupts(void)
