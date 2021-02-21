@@ -52,18 +52,29 @@ int CBlueNRGModule::CmdLeSetAdvertisingData(void)
    TCmdParamsSetAdvertisingData  Params = { 0, };
 
    char U8LocalName[strlen(Data.GetDeviceName()) + 2];
+
    U8LocalName[0]          = strlen(Data.GetDeviceName()) + 1;
    U8LocalName[1]          = 0x09;     // AD_TYPE_COMPLETE_LOCAL_NAME
    if (strlen(Data.GetDeviceName()) > 0)
       strcpy(&U8LocalName[2], Data.GetDeviceName());
-
-   unsigned char U8Flags[] = { 2, 0x01, 0x02, };
-
    memcpy(Params.U8AdvertisingData + Params.u8AdvertisingDataLen, U8LocalName, sizeof(U8LocalName));
    Params.u8AdvertisingDataLen += sizeof(U8LocalName);
 
+   unsigned char U8Flags[] = { 2, 0x01, 0x02, };
+
    memcpy(Params.U8AdvertisingData + Params.u8AdvertisingDataLen, U8Flags, sizeof(U8Flags));
    Params.u8AdvertisingDataLen += sizeof(U8Flags);
+
+   if (Data.IsMeasurementAvailable() == true)
+   {
+      CData::TDeviceReadouts  DeviceReaouts;
+
+      DeviceReaouts.ServiceData.s16TemperatureValue   = Data.GetTemperature();
+      DeviceReaouts.ManufacturerData.u16HumidityValue = Data.GetHumidity();
+      DeviceReaouts.ManufacturerData.u32PressureValue = Data.GetPressure();
+      memcpy(Params.U8AdvertisingData + Params.u8AdvertisingDataLen, &DeviceReaouts, sizeof(DeviceReaouts));
+      Params.u8AdvertisingDataLen += sizeof(DeviceReaouts);
+   }
 
    return SendCommand(CMD_OPCODE_LE_SET_ADVERTISING_DATA, &Params, sizeof(Params));
 }
@@ -71,13 +82,6 @@ int CBlueNRGModule::CmdLeSetAdvertisingData(void)
 int CBlueNRGModule::CmdLeSetScanResponseData(void)
 {
    TCmdParamsSetScanRespData  Params = { 0, };
-   CData::TScanResponseData   ScanResponseData;
-
-   ScanResponseData.ServiceData.s16TemperatureValue   = Data.GetTemperature();
-   ScanResponseData.ManufacturerData.u16HumidityValue = Data.GetHumidity();
-   ScanResponseData.ManufacturerData.u32PressureValue = Data.GetPressure();
-   memcpy(Params.U8ScanRespData, &ScanResponseData, sizeof(ScanResponseData));
-   Params.u8ScanRespDataLen = sizeof(ScanResponseData);
 
    return SendCommand(CMD_OPCODE_LE_SET_SCAN_RESP_DATA, &Params, sizeof(Params));
 }

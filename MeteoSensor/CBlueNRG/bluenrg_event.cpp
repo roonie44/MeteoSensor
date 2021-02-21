@@ -32,7 +32,6 @@ void CBlueNRGModule::ParseEvent(TEventPacket* pEventPacket, int s32EventPacketLe
          Log.StrHex(" Disconnected: conn ", pParams->u16ConnectionHandle, 2);
          Log.StrHexR(" reason ", pParams->u8Reason, 1);
          EventDisconnectionComplete(pParams->u16ConnectionHandle);
-         LL_GPIO_SetOutputPin(PIN_LED_GREEN_PORT, PIN_LED_GREEN_PIN);
          break;
       }
 
@@ -49,7 +48,6 @@ void CBlueNRGModule::ParseEvent(TEventPacket* pEventPacket, int s32EventPacketLe
                Log.StrHex(" Connected: conn ", pParams2->u16ConnectionHandle, 2);
                Log.StrBlobR(" from 0x", pParams2->U8PeerAddress, sizeof(pParams2->U8PeerAddress));
                EventConnected(pParams2->u16ConnectionHandle);
-               LL_GPIO_ResetOutputPin(PIN_LED_GREEN_PORT, PIN_LED_GREEN_PIN);
             }
             break;
 
@@ -179,12 +177,12 @@ void CBlueNRGModule::EventConnected(unsigned short u16ConnectionHandle)
 {
    Connection.u16Handle = u16ConnectionHandle;
    State = STATE_CONNECTED;
-   LL_GPIO_SetOutputPin(PIN_LED_GREEN_PORT, PIN_LED_GREEN_PIN);
+   LL_GPIO_ResetOutputPin(PIN_LED_GREEN_PORT, PIN_LED_GREEN_PIN);
 }
 
 void CBlueNRGModule::EventDisconnectionComplete(unsigned short u16ConnectionHandle)
 {
    Connection.u16Handle = 0;
-   State = STATE_ADVERTISING;
-   LL_GPIO_ResetOutputPin(PIN_LED_GREEN_PORT, PIN_LED_GREEN_PIN);
+   State = STATE_SET_ADVERTISING_PARAMS;
+   LL_GPIO_SetOutputPin(PIN_LED_GREEN_PORT, PIN_LED_GREEN_PIN);
 }

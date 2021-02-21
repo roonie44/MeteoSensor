@@ -4,9 +4,9 @@ class CData
 {
    struct
    {
-      const char     DeviceName[32]       = "MeteoNode";
-      const char     BuildDate[32]        = __DATE__ " " __TIME__ ;
-      const char     FirmwareVersion[16]  = "v1.1";
+      const char     DeviceName[32]             = "MeteoNode";
+      const char     BuildDate[32]              = __DATE__ " " __TIME__ ;
+      const char     FirmwareVersion[16]        = "v1.2";
    } Information;
 
    struct
@@ -17,14 +17,15 @@ class CData
 
    struct
    {
-      signed int     s32Temperature;
-      unsigned int   u32Humidity;
-      unsigned int   u32Pressure;
+      signed int     s32Temperature             = __INT32_MAX__;
+      unsigned int   u32Humidity                = __UINT32_MAX__;
+      unsigned int   u32Pressure                = __UINT32_MAX__;
+      bool           bValidity                  = false;
    } Measurements;
 
 public:
 #pragma pack(1)
-   struct TScanResponseData
+   struct TDeviceReadouts
    {
       struct
       {
@@ -51,6 +52,7 @@ public:
    unsigned short GetPeriodicWakeUpInterval(){ return Configuration.u16PeriodicWakeUpInterval; }
    unsigned short GetAdvertisingInterval()   { return Configuration.u16AdvertisingInterval; }
 
+   bool           IsMeasurementAvailable()   { return Measurements.bValidity; }
    signed int     GetTemperature()           { return Measurements.s32Temperature; }
    unsigned int   GetHumidity()              { return Measurements.u32Humidity; }
    unsigned int   GetPressure()              { return Measurements.u32Pressure; }
@@ -58,4 +60,7 @@ public:
    void           SetTemperature(signed int s32Temperature);
    void           SetHumidity(unsigned int u32Humidity);
    void           SetPressure(unsigned int u32Pressure);
+
+private:
+   void           SetValidity();
 };

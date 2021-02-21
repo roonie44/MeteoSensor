@@ -120,7 +120,7 @@ void CBlueNRGModule::Handle(void)
       if (bDataUpdate)
       {
          bDataUpdate = false;
-         CmdLeSetScanResponseData();
+         CmdLeSetAdvertisingData();
       }
       break;
 
