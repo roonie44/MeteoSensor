@@ -7,16 +7,21 @@ CSensorModule::CSensorModule()
 
 void CSensorModule::Init(void)
 {
-   BME280.Init();
+   HDC1080.Init();
+
+   DataRequest(eDataType::Temperature);
+   DataRequest(eDataType::Humidity);
 }
 
 void CSensorModule::Handle(void)
 {
+   HDC1080.PowerOn();
+
    if (MeasurementRequest.bTemperature)
    {
       MeasurementRequest.bTemperature = false;
       signed int s32Temperature;
-      if (BME280.GetTemperature(s32Temperature) == Status::OK)
+      if (HDC1080.GetTemperature(s32Temperature) == Status::OK)
          Data.SetTemperature(s32Temperature);
    }
 
@@ -24,17 +29,11 @@ void CSensorModule::Handle(void)
    {
       MeasurementRequest.bHumidity = false;
       unsigned int u32Humidity;
-      if (BME280.GetHumidity(u32Humidity) == Status::OK)
+      if (HDC1080.GetHumidity(u32Humidity) == Status::OK)
          Data.SetHumidity(u32Humidity);
    }
 
-   if (MeasurementRequest.bPressure)
-   {
-      MeasurementRequest.bPressure = false;
-      unsigned int u32Pressure;
-      if (BME280.GetPressure(u32Pressure) == Status::OK)
-         Data.SetPressure(u32Pressure);
-   }
+   HDC1080.PowerOff();
 }
 
 void CSensorModule::Event()
@@ -44,7 +43,6 @@ void CSensorModule::Event()
       case EventId::PeriodicWakeUp:
          DataRequest(eDataType::Temperature);
          DataRequest(eDataType::Humidity);
-         DataRequest(eDataType::Pressure);
          break;
 
       default:
@@ -62,10 +60,6 @@ void CSensorModule::DataRequest(eDataType DataType)
 
       case eDataType::Humidity:
          MeasurementRequest.bHumidity     = true;
-         break;
-
-      case eDataType::Pressure:
-         MeasurementRequest.bPressure     = true;
          break;
    }
 

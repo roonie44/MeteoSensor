@@ -165,11 +165,6 @@ void CBlueNRGModule::EventReadPermitRequest(unsigned short u16AttributeHandle)
       Sensor.DataRequest(CSensorModule::eDataType::Humidity);
       bDataReadRequest = true;
    }
-   else if (u16AttributeHandle == Service.EnvironmentalSensing.Characteristic.Pressure.Value.u16Handle)
-   {
-      Sensor.DataRequest(CSensorModule::eDataType::Pressure);
-      bDataReadRequest = true;
-   }
    else CmdGattAllowRead(Connection.u16Handle);
 }
 

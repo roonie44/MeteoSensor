@@ -15,7 +15,6 @@ class CBlueNRGModule : public CModule
    static const unsigned char CHARACTERISTIC_UUID_SOFTWARE_REVISION[2];
 
    static const unsigned char SERVICE_UUID_ENVIRONMENTAL_SENSOR[2];
-   static const unsigned char CHARACTERISTIC_UUID_PRESSURE[2];
    static const unsigned char CHARACTERISTIC_UUID_TEMPERATURE[2];
    static const unsigned char CHARACTERISTIC_UUID_HUMIDITY[2];
 
@@ -33,7 +32,6 @@ class CBlueNRGModule : public CModule
       STATE_SERVICE_ADD_ENVIRONMENTAL_SENSOR,
       STATE_CHAR_ADD_TEMPERATURE,
       STATE_CHAR_ADD_HUMIDITY,
-      STATE_CHAR_ADD_PRESSURE,
       STATE_SET_ADVERTISING_PARAMS,
       STATE_SET_ADVERTISING_DATA,
       STATE_SET_ADVERTISE_ENABLE,
@@ -87,14 +85,6 @@ class CBlueNRGModule : public CModule
                   unsigned short u16Handle;
                }Value;
             }Humidity;
-            struct
-            {
-               unsigned short u16Handle;
-               struct
-               {
-                  unsigned short u16Handle;
-               }Value;
-            }Pressure;
          }Characteristic;
       }EnvironmentalSensing;
    }Service;

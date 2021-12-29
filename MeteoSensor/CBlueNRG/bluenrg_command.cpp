@@ -69,12 +69,13 @@ int CBlueNRGModule::CmdLeSetAdvertisingData(void)
    {
       CData::TDeviceReadouts  DeviceReaouts;
 
-      DeviceReaouts.ServiceData.s16TemperatureValue   = Data.GetTemperature();
-      DeviceReaouts.ManufacturerData.u16HumidityValue = Data.GetHumidity();
-      DeviceReaouts.ManufacturerData.u32PressureValue = Data.GetPressure();
+      DeviceReaouts.ServiceDataTemperature.s16TemperatureValue = Data.GetTemperature();
+      DeviceReaouts.ServiceDataHumidity.u16HumidityValue       = Data.GetHumidity();
       memcpy(Params.U8AdvertisingData + Params.u8AdvertisingDataLen, &DeviceReaouts, sizeof(DeviceReaouts));
       Params.u8AdvertisingDataLen += sizeof(DeviceReaouts);
    }
+   else
+      Log.Str("BLE Measurement data unavailable\r");
 
    return SendCommand(CMD_OPCODE_LE_SET_ADVERTISING_DATA, &Params, sizeof(Params));
 }

@@ -15,13 +15,6 @@ void CData::SetHumidity(unsigned int u32Humidity)
    CEvents::Publish(EventId::DataUpdateHumidity);
 }
 
-void CData::SetPressure(unsigned int u32Pressure)
-{
-   Measurements.u32Pressure = u32Pressure;
-   SetValidity();
-   CEvents::Publish(EventId::DataUpdatePressure);
-}
-
 void CData::SetValidity()
 {
    if (Measurements.s32Temperature == __INT32_MAX__)
@@ -30,11 +23,6 @@ void CData::SetValidity()
       return;
    }
    if (Measurements.u32Humidity == __UINT32_MAX__)
-   {
-      Measurements.bValidity = false;
-      return;
-   }
-   if (Measurements.u32Pressure == __UINT32_MAX__)
    {
       Measurements.bValidity = false;
       return;

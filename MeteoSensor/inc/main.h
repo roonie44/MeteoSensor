@@ -26,7 +26,7 @@
 #include "../CBlueNRG/spi.hpp"
 #include "../CBlueNRG/bluenrg.hpp"
 #include "../CSensor/i2c.hpp"
-#include "../CSensor/BME280.hpp"
+#include "../CSensor/HDC1080.hpp"
 #include "../CSensor/sensor.hpp"
 
 
@@ -37,7 +37,7 @@ extern CRTC             Rtc;
 extern CSpiModule       Spi;
 extern CBlueNRGModule   BlueNRG;
 extern CI2C             I2C;
-extern CBME280          BME280;
+extern CHDC1080         HDC1080;
 extern CSensorModule    Sensor;
 
 int   main           (void);

@@ -9,7 +9,6 @@ public:
    {
       Temperature,
       Humidity,
-      Pressure,
    };
 
 
@@ -25,6 +24,5 @@ private:
    {
       bool  bTemperature;
       bool  bHumidity;
-      bool  bPressure;
    } MeasurementRequest;
 };

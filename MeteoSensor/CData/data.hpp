@@ -6,7 +6,7 @@ class CData
    {
       const char     DeviceName[32]             = "MeteoNode";
       const char     BuildDate[32]              = __DATE__ " " __TIME__ ;
-      const char     FirmwareVersion[16]        = "v1.2";
+      const char     FirmwareVersion[16]        = "v1.3";
    } Information;
 
    struct
@@ -19,7 +19,6 @@ class CData
    {
       signed int     s32Temperature             = __INT32_MAX__;
       unsigned int   u32Humidity                = __UINT32_MAX__;
-      unsigned int   u32Pressure                = __UINT32_MAX__;
       bool           bValidity                  = false;
    } Measurements;
 
@@ -31,17 +30,16 @@ public:
       {
          const unsigned char  u8Length = 5;
          const unsigned char  u8Type   = 0x16;
-         const unsigned short u16UUID  = 0x2A6E; // Temperature
-         signed short         s16TemperatureValue;
-      }ServiceData;
+         const unsigned short u16UUID  = 0x2A6F; // Humidity
+         unsigned short       u16HumidityValue;
+      }ServiceDataHumidity;
       struct
       {
-         const unsigned char  u8Length = 9;
-         const unsigned char  u8Type   = 0xFF;
-         const unsigned short u16CompanyIdentifierCode = 0xFFFF; // used in the internal and interoperability tests before a Company ID has been assigned
-         unsigned short       u16HumidityValue;
-         unsigned int         u32PressureValue;
-      }ManufacturerData;
+         const unsigned char  u8Length = 5;
+         const unsigned char  u8Type   = 0x16;
+         const unsigned short u16UUID  = 0x2A6E; // Temperature
+         signed short         s16TemperatureValue;
+      }ServiceDataTemperature;
    };
 #pragma pack()
 
@@ -55,11 +53,9 @@ public:
    bool           IsMeasurementAvailable()   { return Measurements.bValidity; }
    signed int     GetTemperature()           { return Measurements.s32Temperature; }
    unsigned int   GetHumidity()              { return Measurements.u32Humidity; }
-   unsigned int   GetPressure()              { return Measurements.u32Pressure; }
 
    void           SetTemperature(signed int s32Temperature);
    void           SetHumidity(unsigned int u32Humidity);
-   void           SetPressure(unsigned int u32Pressure);
 
 private:
    void           SetValidity();

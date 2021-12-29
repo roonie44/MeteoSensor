@@ -8,7 +8,7 @@ CRTC              Rtc;
 CSpiModule        Spi;
 CBlueNRGModule    BlueNRG;
 CI2C              I2C(I2C2);
-CBME280           BME280(&I2C);
+CHDC1080          HDC1080(&I2C);
 CSensorModule     Sensor;
 
 int main(void)
@@ -47,10 +47,6 @@ void CommandExecute(unsigned int u32CommandCode)
 
    case 2:
       Sensor.DataRequest(CSensorModule::eDataType::Humidity);
-      break;
-
-   case 3:
-      Sensor.DataRequest(CSensorModule::eDataType::Pressure);
       break;
    }
 }

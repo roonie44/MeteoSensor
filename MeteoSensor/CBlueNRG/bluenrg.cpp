@@ -8,7 +8,6 @@ const unsigned char CBlueNRGModule::CHARACTERISTIC_UUID_HARDWARE_REVISION[2]  = 
 const unsigned char CBlueNRGModule::CHARACTERISTIC_UUID_SOFTWARE_REVISION[2]  = { 0x28, 0x2A, };
 
 const unsigned char CBlueNRGModule::SERVICE_UUID_ENVIRONMENTAL_SENSOR[2]      = { 0x1A, 0x18, };
-const unsigned char CBlueNRGModule::CHARACTERISTIC_UUID_PRESSURE[2]           = { 0x6D, 0x2A, };
 const unsigned char CBlueNRGModule::CHARACTERISTIC_UUID_TEMPERATURE[2]        = { 0x6E, 0x2A, };
 const unsigned char CBlueNRGModule::CHARACTERISTIC_UUID_HUMIDITY[2]           = { 0x6F, 0x2A, };
 
@@ -89,12 +88,6 @@ void CBlueNRGModule::Handle(void)
    case STATE_CHAR_ADD_HUMIDITY:
       Log.Str("BLE char add [HUMIDITY]\r");
       CmdGattAddChar(Service.EnvironmentalSensing.u16Handle, UUID_TYPE_16, CHARACTERISTIC_UUID_HUMIDITY, sizeof(unsigned short), CHAR_PROP_READ, 0, 0x04, 16, 0, &Service.EnvironmentalSensing.Characteristic.Humidity.u16Handle, &Service.EnvironmentalSensing.Characteristic.Humidity.Value.u16Handle);
-      State = STATE_CHAR_ADD_PRESSURE;
-      break;
-
-   case STATE_CHAR_ADD_PRESSURE:
-      Log.Str("BLE char add [PRESSURE]\r");
-      CmdGattAddChar(Service.EnvironmentalSensing.u16Handle, UUID_TYPE_16, CHARACTERISTIC_UUID_PRESSURE, sizeof(unsigned int), CHAR_PROP_READ, 0, 0x04, 16, 0, &Service.EnvironmentalSensing.Characteristic.Pressure.u16Handle, &Service.EnvironmentalSensing.Characteristic.Pressure.Value.u16Handle);
       State = STATE_SET_ADVERTISING_PARAMS;
       break;
 
@@ -131,11 +124,9 @@ void CBlueNRGModule::Handle(void)
 
          signed short   s16TemperatureValue  = Data.GetTemperature();
          unsigned short u16HumidityValue     = Data.GetHumidity();
-         unsigned int   u32PressureValue     = Data.GetPressure();
 
          CmdGattUpdateCharValue(Service.EnvironmentalSensing.u16Handle, Service.EnvironmentalSensing.Characteristic.Temperature.u16Handle,   0, sizeof(s16TemperatureValue),  &s16TemperatureValue);
          CmdGattUpdateCharValue(Service.EnvironmentalSensing.u16Handle, Service.EnvironmentalSensing.Characteristic.Humidity.u16Handle,      0, sizeof(u16HumidityValue),     &u16HumidityValue);
-         CmdGattUpdateCharValue(Service.EnvironmentalSensing.u16Handle, Service.EnvironmentalSensing.Characteristic.Pressure.u16Handle,      0, sizeof(u32PressureValue),     &u32PressureValue);
 
          if (bDataReadRequest == true)
          {
@@ -163,31 +154,6 @@ void CBlueNRGModule::Event()
          break;
    }
 }
-
-//void CBlueNRGModule::Callback(unsigned int u32CallbackId, void *pValue)
-//{
-//   if (u32CallbackId == Service.EnvironmentalSensing.Characteristic.Temperature.Value.u16Handle)
-//   {
-//      Service.EnvironmentalSensing.Characteristic.Temperature.Value.s16Value  = *(signed short*)pValue;
-//      CmdGattUpdateCharValue(Service.EnvironmentalSensing.u16Handle, Service.EnvironmentalSensing.Characteristic.Temperature.u16Handle, 0, sizeof(Service.EnvironmentalSensing.Characteristic.Temperature.Value.s16Value), &Service.EnvironmentalSensing.Characteristic.Temperature.Value.s16Value);
-//      Service.EnvironmentalSensing.Characteristic.Temperature.Updated   = true;
-//      return;
-//   }
-//   if (u32CallbackId == Service.EnvironmentalSensing.Characteristic.Humidity.Value.u16Handle)
-//   {
-//      Service.EnvironmentalSensing.Characteristic.Humidity.Value.u16Value  = *(unsigned short*)pValue;
-//      CmdGattUpdateCharValue(Service.EnvironmentalSensing.u16Handle, Service.EnvironmentalSensing.Characteristic.Humidity.u16Handle, 0, sizeof(Service.EnvironmentalSensing.Characteristic.Humidity.Value.u16Value), &Service.EnvironmentalSensing.Characteristic.Humidity.Value.u16Value);
-//      Service.EnvironmentalSensing.Characteristic.Humidity.Updated   = true;
-//      return;
-//   }
-//   if (u32CallbackId == Service.EnvironmentalSensing.Characteristic.Pressure.Value.u16Handle)
-//   {
-//      Service.EnvironmentalSensing.Characteristic.Pressure.Value.u32Value  = *(unsigned int*)pValue;
-//      CmdGattUpdateCharValue(Service.EnvironmentalSensing.u16Handle, Service.EnvironmentalSensing.Characteristic.Pressure.u16Handle, 0, sizeof(Service.EnvironmentalSensing.Characteristic.Pressure.Value.u32Value), &Service.EnvironmentalSensing.Characteristic.Pressure.Value.u32Value);
-//      Service.EnvironmentalSensing.Characteristic.Pressure.Updated   = true;
-//      return;
-//   }
-//}
 
 int CBlueNRGModule::SendPacketViaSpi(unsigned char* U8Packet, int s32PacketLen)
 {
