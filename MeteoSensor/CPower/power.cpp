@@ -1,6 +1,5 @@
 #include "main.h"
 #include "init.h"
-#include "power.hpp"
 
 CPowerModule::CPowerModule()
 {
@@ -32,7 +31,7 @@ void CPowerModule::EnterStopMode(void)
 
    CClock::Deinit();
 
-   __disable_irq();
+   //__disable_irq();
 
    if (CModule::IsIdle())
    {
@@ -63,6 +62,6 @@ void CPowerModule::EnterStopMode(void)
       Init_Wakeup();
    }
 
-   __enable_irq();
+   //__enable_irq();
    CClock::Init();
 }

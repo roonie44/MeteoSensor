@@ -119,6 +119,7 @@
 						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="CBlueNRG"/>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="CClock"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="CData"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="CHMI"/>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="CLog"/>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="CPower"/>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="CSensor"/>
@@ -244,6 +245,7 @@
 						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="CBlueNRG"/>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="CClock"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="CData"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="CHMI"/>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="CLog"/>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="CPower"/>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="CSensor"/>

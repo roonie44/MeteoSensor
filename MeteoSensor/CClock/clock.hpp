@@ -2,10 +2,10 @@
 
 class CClock
 {
-   static const unsigned int CLOCK_FREQUENCY = 1000; // Hz
-   static       unsigned int TICKS;
+   static const    unsigned int CLOCK_FREQUENCY = 1000; // Hz
+   static volatile unsigned int TICKS;
 
-                unsigned int u32TicksStart;
+                   unsigned int u32TicksStart;
 
 public:
                CClock            () { this->Set(); }

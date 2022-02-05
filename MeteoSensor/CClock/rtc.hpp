@@ -2,7 +2,7 @@
 
 #include "module.hpp"
 
-class CRTC : public CModule
+class CRtcModule : public CModule
 {
 public:
    void  SetPeriodicWakeUp (unsigned short u16Seconds);

@@ -7,6 +7,8 @@ enum class EventId
    None,
    DeviceIdle,
    PeriodicWakeUp,
+   BleClientConnected,
+   BleClientDisconnected,
    DataUpdateTemperature,
    DataUpdateHumidity,
    DataUpdatePressure,

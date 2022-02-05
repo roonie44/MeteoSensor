@@ -172,12 +172,12 @@ void CBlueNRGModule::EventConnected(unsigned short u16ConnectionHandle)
 {
    Connection.u16Handle = u16ConnectionHandle;
    State = STATE_CONNECTED;
-   LL_GPIO_ResetOutputPin(PIN_LED_GREEN_PORT, PIN_LED_GREEN_PIN);
+   CEvents::Publish(EventId::BleClientConnected);
 }
 
 void CBlueNRGModule::EventDisconnectionComplete(unsigned short u16ConnectionHandle)
 {
    Connection.u16Handle = 0;
    State = STATE_SET_ADVERTISING_PARAMS;
-   LL_GPIO_SetOutputPin(PIN_LED_GREEN_PORT, PIN_LED_GREEN_PIN);
+   CEvents::Publish(EventId::BleClientDisconnected);
 }

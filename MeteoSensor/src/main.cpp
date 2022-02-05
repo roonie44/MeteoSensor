@@ -4,7 +4,8 @@
 CLogModule        Log;
 CData             Data;
 CPowerModule      Power;
-CRTC              Rtc;
+CRtcModule        Rtc;
+CHmiModule        Hmi;
 CSpiModule        Spi;
 CBlueNRGModule    BlueNRG;
 CI2C              I2C(I2C2);

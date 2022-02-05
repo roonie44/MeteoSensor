@@ -32,7 +32,7 @@
 #define PIN_BLUENRG_SPI_AF                LL_GPIO_AF_5
 #define SPI_BLUENRG                       SPI1
 
-// Sensor BME280
+// Sensor
 #define PIN_SENSOR_I2C_SCL_PIN            LL_GPIO_PIN_10
 #define PIN_SENSOR_I2C_SCL_PORT           GPIOB
 #define PIN_SENSOR_I2C_SCL_AF             LL_GPIO_AF_4

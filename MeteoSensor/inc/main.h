@@ -22,6 +22,7 @@
 #include "../CData/data.hpp"
 #include "../CPower/power.hpp"
 #include "../CClock/rtc.hpp"
+#include "../CHMI/hmi.hpp"
 #include "../CClock/clock.hpp"
 #include "../CBlueNRG/spi.hpp"
 #include "../CBlueNRG/bluenrg.hpp"
@@ -33,7 +34,8 @@
 extern CLogModule       Log;
 extern CData            Data;
 extern CPowerModule     Power;
-extern CRTC             Rtc;
+extern CRtcModule       Rtc;
+extern CHmiModule       Hmi;
 extern CSpiModule       Spi;
 extern CBlueNRGModule   BlueNRG;
 extern CI2C             I2C;

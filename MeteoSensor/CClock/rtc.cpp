@@ -1,7 +1,7 @@
 #include "main.h"
 #include "events.hpp"
 
-void CRTC::SetPeriodicWakeUp(unsigned short u16Seconds)
+void CRtcModule::SetPeriodicWakeUp(unsigned short u16Seconds)
 {
    LL_RTC_DisableWriteProtection(RTC);
    LL_RTC_WAKEUP_Disable(RTC);
@@ -16,7 +16,7 @@ void CRTC::SetPeriodicWakeUp(unsigned short u16Seconds)
    LL_RTC_EnableWriteProtection(RTC);
 }
 
-void CRTC::InterruptWakeUp()
+void CRtcModule::InterruptWakeUp()
 {
    CEvents::Publish(EventId::PeriodicWakeUp);
 }

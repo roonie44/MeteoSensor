@@ -1,6 +1,6 @@
 #include "main.h"
 
-unsigned int CClock::TICKS = 0;
+volatile unsigned int CClock::TICKS = 0;
 
 void CClock::Init()
 {
@@ -10,7 +10,7 @@ void CClock::Init()
 }
 void CClock::Deinit()
 {
-   SysTick->CTRL = 0;
+   SysTick->CTRL &= ~SysTick_CTRL_ENABLE_Msk;
 }
 void CClock::Tick()
 {
