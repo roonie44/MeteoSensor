@@ -194,5 +194,6 @@ void CLogModule::HandleRx(void)
 
 void CLogModule::Wait(void)
 {
-   while(LL_DMA_IsEnabledChannel(DMA1, DMA_CHANNEL_LOG_TX) != 0);
+   while(LL_DMA_IsEnabledChannel(DMA1, DMA_CHANNEL_LOG_TX) != 0 ||
+         LL_USART_IsActiveFlag_TC(USART_LOG) == 0);
 }

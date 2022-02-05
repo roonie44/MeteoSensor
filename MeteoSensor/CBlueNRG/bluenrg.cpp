@@ -94,18 +94,18 @@ void CBlueNRGModule::Handle(void)
    case STATE_SET_ADVERTISING_PARAMS:
       Log.Str("BLE LE Set Advertising Params\r");
       CmdLeSetAdvertisingParams();
-      State = STATE_SET_ADVERTISING_DATA;
-      break;
-
-   case STATE_SET_ADVERTISING_DATA:
-      Log.Str("BLE LE Set Advertising Data\r");
-      CmdLeSetAdvertisingData();
       State = STATE_SET_ADVERTISE_ENABLE;
       break;
 
    case STATE_SET_ADVERTISE_ENABLE:
       Log.Str("BLE LE Set Advertise Enable\r");
       CmdLeSetAdvertiseEnable();
+      State = STATE_SET_ADVERTISING_DATA;
+      break;
+
+   case STATE_SET_ADVERTISING_DATA:
+      Log.Str("BLE LE Set Advertising Data\r");
+      CmdLeSetAdvertisingData();
       State = STATE_ADVERTISING;
       break;
 
@@ -113,7 +113,7 @@ void CBlueNRGModule::Handle(void)
       if (bDataUpdate)
       {
          bDataUpdate = false;
-         CmdLeSetAdvertisingData();
+         State = STATE_SET_ADVERTISING_DATA;
       }
       break;
 
