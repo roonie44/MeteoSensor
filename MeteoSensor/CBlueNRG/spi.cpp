@@ -4,7 +4,9 @@ int CSpiModule::ReadWrite(unsigned char* U8Data, int s32Length)
 {
    int s32Idx = 0;
 
+#ifdef DEBUG
    Log.StrBlob("SPI TX ", U8Data, s32Length);
+#endif
 
    while(s32Idx < s32Length)
    {
@@ -20,7 +22,10 @@ int CSpiModule::ReadWrite(unsigned char* U8Data, int s32Length)
    }
    while((SPI_BLUENRG->SR & SPI_SR_FTLVL) != 0);
 
+#ifdef DEBUG
    Log.StrBlobR(" RX ", U8Data, s32Length);
+#endif
+
    return 0;
 }
 

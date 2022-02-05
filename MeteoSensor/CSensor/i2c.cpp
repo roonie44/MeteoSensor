@@ -17,8 +17,10 @@ Status CI2C::SetSlaveAddress(unsigned char u8Address)
 
 Status CI2C::Write(unsigned char *pData, int s32Length)
 {
+#ifdef DEBUG
    Log.StrHex("I2C [", SlaveAddress, 1);
    Log.Str("] write ");
+#endif
 
    MODIFY_REG  (pI2C->CR2, I2C_CR2_SADD, SlaveAddress << 1);
    MODIFY_REG  (pI2C->CR2, I2C_CR2_NBYTES, s32Length << I2C_CR2_NBYTES_Pos);
@@ -31,13 +33,18 @@ Status CI2C::Write(unsigned char *pData, int s32Length)
       if ((pI2C->ISR & I2C_ISR_TXIS) != 0)
       {
          pI2C->TXDR = *pData;
+#ifdef DEBUG
          Log.Hex(*pData, 1);
+#endif
          pData++;
       }
    }
    SET_BIT(pI2C->ICR, I2C_ICR_STOPCF);
 
+#ifdef DEBUG
    Log.Str("\r");
+#endif
+
    return Status::OK;
 }
 
@@ -48,8 +55,10 @@ Status CI2C::Write(unsigned char u8Data)
 
 Status CI2C::Read(void *pData, int s32Length)
 {
+#ifdef DEBUG
    Log.StrHex("I2C [", SlaveAddress, 1);
    Log.Str("] read ");
+#endif
 
    MODIFY_REG  (pI2C->CR2, I2C_CR2_SADD, SlaveAddress << 1);
    MODIFY_REG  (pI2C->CR2, I2C_CR2_NBYTES, s32Length << I2C_CR2_NBYTES_Pos);
@@ -62,12 +71,17 @@ Status CI2C::Read(void *pData, int s32Length)
       if ((pI2C->ISR & I2C_ISR_RXNE) != 0)
       {
          *(unsigned char*)pData = pI2C->RXDR;
+#ifdef DEBUG
          Log.Hex(*(unsigned char*)pData, 1);
+#endif
          pData = (unsigned char*)pData + 1;
       }
    }
    SET_BIT(pI2C->ICR, I2C_ICR_STOPCF);
 
+#ifdef DEBUG
    Log.Str("\r");
+#endif
+
    return Status::OK;
 }
